@@ -1,0 +1,12 @@
+# build output
+dist/
+# astro generated types
+.astro/
+# deps
+node_modules/
+# logs
+npm-debug.log*
+# os / editor
+.DS_Store
+*.local
+.vscode/
