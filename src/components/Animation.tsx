@@ -313,11 +313,15 @@ export default function Animation({
     let start = 0;
     let pauseStart = 0;
     let pausedAccum = 0;
+    let painted = false; // has a frame actually been committed to the canvas yet?
     const phase = phaseRef.current ?? 0; // random per-instance desync offset (s)
     const frame = (now: number) => {
       if (!start) start = now;
-      // freeze on the current frame while paused; resume without a time jump
-      if (!reduce && pausedRef.current) {
+      // freeze on the current frame while paused; resume without a time jump.
+      // Gated on `painted` so an instance that mounts already-paused (or whose
+      // image is still loading) still commits its first frame — otherwise it
+      // would stay blank forever with nothing to freeze on.
+      if (!reduce && pausedRef.current && painted) {
         if (!pauseStart) pauseStart = now;
         raf = requestAnimationFrame(frame);
         return;
@@ -402,6 +406,7 @@ export default function Animation({
             }
           }
         }
+        painted = true;
       }
       if (!reduce) raf = requestAnimationFrame(frame);
     };

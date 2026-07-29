@@ -20,7 +20,9 @@ export interface OverlaySpec {
   gradient?: Grad;
   vignette?: boolean;
   logo?: { anchor: Anchor; scale: number; variant: Variant; mark: boolean };
-  coverGroup?: { scale: number; variant: Variant; city: string; date: string };
+  // textScale sizes the city pill + date line independently of the logo, so a
+  // large lockup doesn't leave the type looking undersized. Defaults to 1.
+  coverGroup?: { scale: number; variant: Variant; city: string; date: string; textScale?: number };
   safeZone?: { kind: 'circle' | 'rect'; xf: number; yf: number; wf: number; hf: number };
 }
 
@@ -161,8 +163,9 @@ function drawCoverGroup(ctx: Ctx, W: number, H: number, gs: NonNullable<OverlayS
   const ww = wh * WAR;
   const g = mh * 0.22;
   const lockupW = mw + g + ww;
-  const s = S / 500;
-  const pillH = 46 * s;
+  const ts = gs.textScale ?? 1;
+  const s = (S / 500) * ts;
+  const pillH = 46 * s; // matches what drawPill returns for this `s`
   const pillGap = S * 0.055;
   const cx = W / 2;
 
@@ -177,7 +180,7 @@ function drawCoverGroup(ctx: Ctx, W: number, H: number, gs: NonNullable<OverlayS
 
   // date / time pinned to the bottom with padding
   if (gs.date.trim()) {
-    const dateSize = S * 0.034;
+    const dateSize = S * 0.034 * ts;
     const padBottom = S * 0.075;
     drawText(ctx, gs.date, cx, H - padBottom - dateSize / 2, dateSize, {
       color: '#F4F5FF',

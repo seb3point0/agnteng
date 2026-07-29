@@ -90,6 +90,22 @@ export const TEMPLATES: Template[] = [
       coverGroup: { scale: l.scale, variant: l.variant, city: t.city, date: t.date },
     }),
   },
+
+  // ── Title slide (16:9 presentation opener) ──
+  // Same coverGroup design as the Luma cover; drawCoverGroup sizes off
+  // min(W,H), so on a wide frame the lockup reads smaller than on the 1000²
+  // square — hence the higher default scale.
+  {
+    id: 'cover-title',
+    group: 'cover',
+    name: 'Title slide (16:9)',
+    frame: { w: 1920, h: 1080 },
+    defaults: { logoAnchor: 'center', logoScale: 0.62, variant: 'white', mark: false },
+    build: (t, l) => ({
+      vignette: true,
+      coverGroup: { scale: l.scale, variant: l.variant, city: t.city, date: t.date },
+    }),
+  },
 ];
 
 export function findTemplate(id: string | null): Template | null {
