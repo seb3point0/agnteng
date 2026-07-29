@@ -76,7 +76,7 @@ export const LINKS = [
 export const ASKS = [
   { n: '01', title: 'Organize', body: 'Meetups and events' },
   { n: '02', title: 'Build', body: 'Website and tools' },
-  { n: '03', title: 'Voice', body: 'Social and community' },
+  { n: '03', title: 'Communicate', body: 'Social and community' },
   { n: '04', title: 'Teach', body: 'Content, resources, newsletter' },
   { n: '05', title: 'Support', body: 'Partners, sponsors, venues' },
 ];
@@ -85,7 +85,7 @@ export const ASKS = [
 // All three bodies are deliberately the same length (37 chars) so they set as
 // one even line each and the block reads as a set, not a paragraph.
 export const RULES = [
-  { n: '01', title: 'Under ten minutes', body: "Run long and we'll kindly cut you off" },
-  { n: '02', title: 'Teach something', body: 'People leave having learned something' },
+  { n: '01', title: 'Under 10 min', body: "Run long and we'll kindly cut you off" },
+  { n: '02', title: 'Make it useful', body: 'People leave having learned something' },
   { n: '03', title: 'No pitches', body: 'Save the fundraise for the networking' },
 ];
