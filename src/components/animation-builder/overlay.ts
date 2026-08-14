@@ -165,8 +165,12 @@ function drawCoverGroup(ctx: Ctx, W: number, H: number, gs: NonNullable<OverlayS
   const lockupW = mw + g + ww;
   const ts = gs.textScale ?? 1;
   const s = (S / 500) * ts;
-  const pillH = 46 * s; // matches what drawPill returns for this `s`
-  const pillGap = S * 0.055;
+  // An empty city means no pill at all — otherwise this drew a bare capsule
+  // with nothing in it, and the lockup sat high by half the pill's height
+  // because the group was still measured as though it were there.
+  const hasPill = !!gs.city.trim();
+  const pillH = hasPill ? 46 * s : 0; // matches what drawPill returns for this `s`
+  const pillGap = hasPill ? S * 0.055 : 0;
   const cx = W / 2;
 
   // logo + city pill grouped, dead-centre of the frame
@@ -176,7 +180,7 @@ function drawCoverGroup(ctx: Ctx, W: number, H: number, gs: NonNullable<OverlayS
   ctx.drawImage(mark, lx, top, mw, mh);
   ctx.drawImage(word, lx + mw + g, top + (mh - wh) / 2, ww, wh);
   if (!fontsReady) return;
-  drawPill(ctx, cx, top + mh + pillGap, gs.city, s);
+  if (hasPill) drawPill(ctx, cx, top + mh + pillGap, gs.city, s);
 
   // date / time pinned to the bottom with padding
   if (gs.date.trim()) {
