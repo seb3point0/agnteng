@@ -10,14 +10,23 @@ import { COMMUNITY, EVENTS, type PastEvent } from './content';
 // crop of a room shot, which is the wrong crop for a room. Height tracks the
 // original's 0.588 aspect so all three still read as the same object.
 //
-// Attendance sits on each card because this deck is read, not narrated: the
-// meetup audience is looking at the photo while someone talks over it, and a
-// sponsor is looking for the number.
+// The subhead runs to two lines here, so it is set smaller than the deck's
+// default and held to a measure rather than the full 1664: a 40px line across
+// the whole stage is about 90 characters, which is past the point where the
+// eye reliably finds the start of the next one.
+//
+// Cards carry a city and a date and nothing else. Per-event attendance lived
+// here in the first draft and said the same thing as the stat block two slides
+// later, less well — three numbers under three photos invite comparison
+// between the events, which is not the argument this slide is making.
 // ─────────────────────────────────────────────────────────────────────────
 
 const GAP = 40;
 const CARD_W = (1920 - PAD * 2 - GAP * (EVENTS.length - 1)) / EVENTS.length;
-const CARD_H = Math.round(CARD_W * 0.588);
+// Taller than the meetup deck's 0.588. With the attendance line gone the cards
+// no longer reached far enough up the stage, and the slide read as a headline
+// with a strip of photos parked at the bottom.
+const CARD_H = Math.round(CARD_W * 0.66);
 
 export function Background({ active }: SlideProps) {
   return <Backdrop fade="radial" motion={22} paused={!active} />;
@@ -27,7 +36,7 @@ export function Content() {
   return (
     <Frame>
       <Headline>{COMMUNITY.headline}</Headline>
-      <Subhead>{COMMUNITY.subhead}</Subhead>
+      <Subhead style={{ fontSize: 36, lineHeight: 1.34, maxWidth: 1380 }}>{COMMUNITY.subhead}</Subhead>
 
       <div style={{ display: 'flex', gap: GAP, marginTop: 'auto' }}>
         {EVENTS.map((e) => (
@@ -58,11 +67,11 @@ function Card({ event }: { event: PastEvent }) {
         />
       </div>
 
-      <div style={{ marginTop: 22, display: 'flex', alignItems: 'baseline', gap: 16 }}>
+      <div style={{ marginTop: 24, display: 'flex', alignItems: 'baseline', gap: 20 }}>
         <span
           style={{
             fontFamily: 'var(--font-sans)',
-            fontSize: 42,
+            fontSize: 44,
             fontWeight: 800,
             letterSpacing: '-0.02em',
             color: C.white,
@@ -70,17 +79,7 @@ function Card({ event }: { event: PastEvent }) {
         >
           {event.city}
         </span>
-        <span style={{ fontFamily: 'var(--font-mono)', fontSize: 22, color: C.periwinkle }}>{event.date}</span>
-        <span
-          style={{
-            marginLeft: 'auto',
-            fontFamily: 'var(--font-mono)',
-            fontSize: 22,
-            color: 'rgba(244,245,255,0.55)',
-          }}
-        >
-          {event.attended} in the room
-        </span>
+        <span style={{ fontFamily: 'var(--font-mono)', fontSize: 24, color: C.periwinkle }}>{event.date}</span>
       </div>
     </div>
   );

@@ -1,29 +1,38 @@
-import { C, type SlideProps } from '../slides/deck';
+import { C, PAD, type SlideProps } from '../slides/deck';
 import { Backdrop, Frame, Headline, Subhead } from '../slides/parts';
-import { FUNNEL, ROLE_NOTE, ROLE_TOTAL, ROLES } from './content';
+import { FUNNEL, ROLE_TOTAL, ROLES } from './content';
 
 // ─────────────────────────────────────────────────────────────────────────
-// 03 — Who is in the room. Roles on the left, the funnel on the right.
+// 03 — Who is in the room.
 //
-// One hue for every bar, because these are parts of one whole and a second
-// colour would imply a second variable that does not exist. `Other` is the only
-// bar that changes — it is a residual, not a segment, and drawing it at full
-// strength would let it read as a fifth peer category.
+// Percentages of one whole, so one bar divided into four — not four bars.
+// Separate bars encode "how big is each", which is the question a sponsor is
+// not asking; a single divided bar encodes "what is this room made of", which
+// is the one they are. It also makes the four numbers visibly sum to
+// everything, so nothing looks omitted.
 //
-// Bars are proportional to the largest value rather than to the total: at 44%
-// of 519, Founders would otherwise use less than half the width available and
-// Investors would collapse to a stub too short to carry its own label.
+// Ordered largest first except that Other sits ahead of Investors: it is a
+// residual rather than a category, and ending on it would leave the eye on the
+// least meaningful segment. Investors last means the smallest slice is against
+// a rounded end, where a 5% sliver still reads as deliberate.
 //
-// The funnel is the number a sponsor is actually buying and it is the smallest
-// of the three, so it is stated rather than charted — 63 in a room is a real
-// meetup, and a bar that made it look like 209 would be the lie that gets
-// noticed on the night.
+// The legend carries the percentages instead of labelling segments in place —
+// at 5% the Investors band is 83px wide, which fits neither a word nor a
+// number at any size readable from the back of a room.
 // ─────────────────────────────────────────────────────────────────────────
 
-const BAR_MAX = Math.max(...ROLES.map((r) => r.n));
-const TRACK = 720;
-const LABEL_W = 260;
-const ROW_H = 96;
+const TRACK_W = 1920 - PAD * 2;
+const BAR_H = 116;
+
+// All four are opaque. Other was a white wash at 26% and the animated field
+// showed straight through it, so the one segment that is meant to recede read
+// as a hole in the bar instead of a part of it.
+const SEGMENT_COLOR: Record<string, string> = {
+  Founders: C.brightBlue,
+  Engineers: C.periwinkle,
+  Other: '#39406B',
+  Investors: C.magenta,
+};
 
 export function Background({ active }: SlideProps) {
   return <Backdrop fade="left" motion={20} paused={!active} />;
@@ -33,37 +42,51 @@ export function Content() {
   return (
     <Frame>
       <Headline>Who&rsquo;s in the room</Headline>
-      <Subhead>{ROLE_TOTAL} approved registrants across three events</Subhead>
+      <Subhead>{ROLE_TOTAL} registrants across three events</Subhead>
 
-      <div style={{ display: 'flex', gap: 88, marginTop: 'auto', alignItems: 'flex-end' }}>
-        <div style={{ flex: 'none' }}>
+      <div style={{ marginTop: 'auto' }}>
+        {/* one whole, divided */}
+        <div style={{ display: 'flex', width: TRACK_W, height: BAR_H, borderRadius: 10, overflow: 'hidden' }}>
           {ROLES.map((r) => (
-            <Bar key={r.label} label={r.label} n={r.n} muted={r.label === 'Other'} />
+            <div key={r.label} style={{ width: `${r.pct}%`, background: SEGMENT_COLOR[r.label] }} />
           ))}
-          <p
-            style={{
-              margin: '26px 0 0',
-              fontFamily: 'var(--font-mono)',
-              fontSize: 22,
-              color: 'rgba(244,245,255,0.58)',
-            }}
-          >
-            {ROLE_NOTE}
-          </p>
         </div>
 
-        <div style={{ flex: 1, borderLeft: '1px solid rgba(244,245,255,0.14)', paddingLeft: 72 }}>
+        <div style={{ display: 'flex', width: TRACK_W, marginTop: 40 }}>
+          {ROLES.map((r) => (
+            <Legend key={r.label} label={r.label} pct={r.pct} color={SEGMENT_COLOR[r.label]} />
+          ))}
+        </div>
+
+        {/* The stats sit on the same four columns as the legend above them, so
+            the block has one grid rather than two competing ones — the label
+            under Founders, the numbers under Other and Investors. */}
+        <div
+          style={{
+            display: 'flex',
+            width: TRACK_W,
+            marginTop: 60,
+            paddingTop: 44,
+            borderTop: '1px solid rgba(244,245,255,0.14)',
+          }}
+        >
           <div
             style={{
+              flex: 1,
               fontFamily: 'var(--font-mono)',
-              fontSize: 22,
+              fontSize: 24,
+              lineHeight: 1.5,
               letterSpacing: '0.18em',
               textTransform: 'uppercase',
               color: C.periwinkle,
+              alignSelf: 'center',
             }}
           >
-            Per event, on average
+            Per event,
+            <br />
+            on average
           </div>
+          <div style={{ flex: 1 }} />
           {FUNNEL.map((f, i) => (
             <Stat key={f.label} label={f.label} n={f.avg} emphasis={i === FUNNEL.length - 1} />
           ))}
@@ -73,56 +96,49 @@ export function Content() {
   );
 }
 
-function Bar({ label, n, muted }: { label: string; n: number; muted: boolean }) {
+/** Legend columns are equal width, not segment width. Sitting each label under
+ *  its own band is the tidier idea and does not survive contact with the data:
+ *  the Investors column would be 83px, which holds neither "5%" at this size
+ *  nor the word beneath it. The colour chip does the matching instead. */
+function Legend({ label, pct, color }: { label: string; pct: number; color: string }) {
   return (
-    <div style={{ display: 'flex', alignItems: 'center', height: ROW_H, gap: 28 }}>
-      <span
+    <div style={{ flex: 1, paddingRight: 24, minWidth: 0 }}>
+      <div style={{ width: 48, height: 8, borderRadius: 4, background: color }} />
+      <div
         style={{
-          width: LABEL_W,
-          flex: 'none',
+          marginTop: 18,
           fontFamily: 'var(--font-sans)',
-          fontSize: 40,
-          fontWeight: 700,
-          letterSpacing: '-0.02em',
-          color: muted ? 'rgba(244,245,255,0.6)' : C.white,
+          fontSize: 74,
+          fontWeight: 800,
+          lineHeight: 1,
+          letterSpacing: '-0.03em',
+          color: C.white,
+        }}
+      >
+        {pct}%
+      </div>
+      <div
+        style={{
+          marginTop: 10,
+          fontFamily: 'var(--font-sans)',
+          fontSize: 30,
+          fontWeight: 500,
+          color: 'rgba(244,245,255,0.62)',
         }}
       >
         {label}
-      </span>
-      {/* The track is opaque, not a white wash: at 7% alpha the animated field
-          showed straight through it and every bar read as dithered noise. */}
-      <span style={{ width: TRACK, flex: 'none', height: 40, background: '#141838', borderRadius: 4 }}>
-        <span
-          style={{
-            display: 'block',
-            height: '100%',
-            width: (n / BAR_MAX) * TRACK,
-            background: muted ? C.periwinkle : C.brightBlue,
-            borderRadius: 4,
-          }}
-        />
-      </span>
-      <span
-        style={{
-          fontFamily: 'var(--font-mono)',
-          fontSize: 38,
-          fontWeight: 600,
-          color: muted ? 'rgba(244,245,255,0.6)' : C.white,
-        }}
-      >
-        {n}
-      </span>
+      </div>
     </div>
   );
 }
 
 function Stat({ label, n, emphasis }: { label: string; n: number; emphasis: boolean }) {
   return (
-    <div style={{ marginTop: 34 }}>
+    <div style={{ flex: 1 }}>
       <div
         style={{
           fontFamily: 'var(--font-sans)',
-          fontSize: emphasis ? 108 : 78,
+          fontSize: 92,
           fontWeight: 800,
           lineHeight: 1,
           letterSpacing: '-0.03em',
@@ -133,7 +149,7 @@ function Stat({ label, n, emphasis }: { label: string; n: number; emphasis: bool
       </div>
       <div
         style={{
-          marginTop: 8,
+          marginTop: 10,
           fontFamily: 'var(--font-sans)',
           fontSize: 30,
           fontWeight: 500,

@@ -8,9 +8,13 @@ import { FORMAT, RULES } from './content';
 // are evidence rather than instruction — the reason the room is worth being in
 // front of — so they sit beneath the format as its supporting detail.
 //
-// The rules keep their own heading rather than running straight on from the
-// subhead. Without it the three rows read as three more format details, and
-// "No pitches" stops being a rule the event enforces.
+// The subhead is the format, so it is set larger than the deck default and the
+// rules are pushed clear of it: at 40px with the rules directly under, the
+// three talks and the networking read as the first line of a list rather than
+// as the thing the slide is about.
+//
+// The rules keep their own heading. Without it the three rows read as three
+// more format details, and "No pitches" stops being a rule the event enforces.
 // ─────────────────────────────────────────────────────────────────────────
 
 export function Background({ active }: SlideProps) {
@@ -21,7 +25,9 @@ export function Content() {
   return (
     <Frame>
       <Headline>{FORMAT.headline}</Headline>
-      <Subhead>{FORMAT.subhead}</Subhead>
+      <Subhead style={{ margin: '36px 0 0', fontSize: 46, lineHeight: 1.3, maxWidth: 1320, color: C.white }}>
+        {FORMAT.subhead}
+      </Subhead>
 
       <div style={{ marginTop: 'auto' }}>
         <div
@@ -31,7 +37,7 @@ export function Content() {
             letterSpacing: '0.18em',
             textTransform: 'uppercase',
             color: C.periwinkle,
-            marginBottom: 12,
+            marginBottom: 22,
           }}
         >
           Talk rules

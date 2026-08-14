@@ -18,68 +18,78 @@ export const TITLE = {
 } as const;
 
 // ── Slide 02: the room ─────────────────────────────────────────────────────
+// The subhead is the site's own hero line, extended. Cities are deliberately
+// absent: the deck is read by sponsors who may be backing a city that is not
+// yet on the list, and naming two of them reads as a limit rather than a
+// footprint. The cards underneath say where, for anyone counting.
 export const COMMUNITY = {
   headline: 'The room for agentic engineering',
-  subhead: 'Founders, engineers and operators building with agents — Lisbon and Berlin',
+  subhead:
+    'A community of engineers and founders turning agents into an unfair advantage — meeting monthly, in person, to compare what actually works in production.',
 };
 
 export interface PastEvent {
   city: string;
   date: string;
   photo: string;
-  attended: number;
 }
 
 // Dates are the registration system's, which is also where the funnel numbers
 // below come from. The meetup deck says 29 May and 17 Jun for the first two;
 // those are a day or two out and this is the version to trust.
-//
-// TODO — the July card is the only placeholder in the deck. It points at the
-// city shot that used to back the meetup title slide, because no room photo
-// from the 29 July event exists in the repo yet. It reads as a postcard between
-// two photographs of a full room, which undercuts exactly the thing this slide
-// is for. Drop a room shot in public/assets/photos/events/ and change this one
-// line.
 export const EVENTS: PastEvent[] = [
-  { city: 'Lisbon', date: '27 May 2026', photo: '/assets/photos/events/lisbon-may2026.jpg', attended: 43 },
-  { city: 'Berlin', date: '16 Jun 2026', photo: '/assets/photos/events/berlin-jun2026.jpg', attended: 70 },
-  { city: 'Lisbon', date: '29 Jul 2026', photo: '/assets/photos/event-lisbon.jpg', attended: 75 },
+  { city: 'Lisbon', date: '27 May 2026', photo: '/assets/photos/events/lisbon-may2026.jpg' },
+  { city: 'Berlin', date: '16 Jun 2026', photo: '/assets/photos/events/berlin-jun2026.jpg' },
+  { city: 'Lisbon', date: '29 Jul 2026', photo: '/assets/photos/events/lisbon-jul2026.webp' },
 ];
 
 // ── Slide 03: who is in the room ───────────────────────────────────────────
-// The full role breakdown is ten categories long; on a slide read from the back
-// of a room that is a wall of small bars. Four rows carry the same argument.
-// `Other` is the remaining six roles summed — researchers, BD, marketing, PM,
-// DevRel, students, press — and is labelled so, not hidden.
+// Shares of one whole, so percentages rather than counts — a sponsor is buying
+// the mix, and 228 means nothing without the denominator beside it.
+//
+// Engineers folds in researchers and DevRel (135 + 36 + 14 = 185): all three
+// are the same person to a sponsor, and splitting them made the second-largest
+// group look like the fourth. `Other` is the remaining five roles — BD,
+// marketing, product, students, press — and is a residual, not a segment.
+//
+// Percentages are of 519 approved registrants and are rounded to whole numbers
+// that still sum to 100. Change any count and check that they still do.
 export const ROLES = [
-  { label: 'Founders', n: 228 },
-  { label: 'Engineers', n: 135 },
-  { label: 'Investors', n: 28 },
-  { label: 'Other', n: 128 },
+  { label: 'Founders', pct: 44 },
+  { label: 'Engineers', pct: 36 },
+  { label: 'Other', pct: 15 },
+  { label: 'Investors', pct: 5 },
 ] as const;
 
-export const ROLE_TOTAL = ROLES.reduce((t, r) => t + r.n, 0); // 519
-export const ROLE_NOTE = 'Other: researchers, BD, marketing, product, DevRel, students, press';
+export const ROLE_TOTAL = 519;
 
 // Per-event averages across Lisbon · Berlin · Lisbon. Registered 223/214/190,
-// approved 150/196/173, attended 43/70/75 — a real meetup show-rate, stated
-// plainly rather than quoting registrations as if they were attendance.
+// attended 43/70/75 — a real meetup show-rate, stated plainly rather than
+// quoting registrations as if they were a door count.
 export const FUNNEL = [
-  { label: 'Register', avg: 209 },
-  { label: 'Approved', avg: 173 },
-  { label: 'In the room', avg: 63 },
+  { label: 'Register', avg: 210 },
+  { label: 'Attend', avg: 63 },
 ] as const;
 
 // ── Slide 04: what we know about them ──────────────────────────────────────
+// Two columns: what they do on the left, where to find them on the right. Only
+// Intent carries a description — the other five are their own explanation, and
+// a line of body text under "GitHub" is noise that makes the slide look busier
+// than it is.
 export const CAPTURE = {
   headline: 'What we know about them',
   subhead: 'Every registration, enriched from public profiles',
-  fields: [
-    { n: '01', title: 'Company', body: 'Where they work today' },
-    { n: '02', title: 'Role', body: 'What they actually do there' },
-    { n: '03', title: 'GitHub', body: 'What they build in the open' },
-    { n: '04', title: 'LinkedIn', body: 'Track record and network' },
-    { n: '05', title: 'Intent', body: 'Hiring · job-seeking · raising · co-founder' },
+  columns: [
+    [
+      { n: '01', title: 'Company' },
+      { n: '02', title: 'Role' },
+      { n: '03', title: 'Intent', body: 'Hiring · job-seeking · raising · co-founder' },
+    ],
+    [
+      { n: '04', title: 'GitHub' },
+      { n: '05', title: 'LinkedIn' },
+      { n: '06', title: 'X' },
+    ],
   ],
 };
 
@@ -100,7 +110,6 @@ export const RULES = [
 // ── Slide 06: packages ─────────────────────────────────────────────────────
 export interface Tier {
   name: string;
-  availability: string;
   benefits: string[];
   prices: { period: string; price: string; note?: string }[];
   featured: boolean;
@@ -109,25 +118,21 @@ export interface Tier {
 export const TIERS: Tier[] = [
   {
     name: 'Partner',
-    availability: 'Exclusive — 1 per period',
     benefits: [
       'Logo on the event page, recaps and intro slides',
       'Mention during the event opening',
       'Merch and swag distribution at the event',
-      'A hiring or looking-for slide, presented by the organizer',
-      'Enriched attendee list — opted-in registrants only',
-      'Personal introductions to the people you want to meet',
+      'One dedicated slide, presented by the organizer',
+      'Access to the enriched attendee list',
     ],
     prices: [
       { period: 'Single event', price: '$1,000' },
       { period: '3 months', price: '$2,400', note: '20% off' },
-      { period: '6 months', price: '$4,200', note: '30% off' },
     ],
     featured: true,
   },
   {
     name: 'Community',
-    availability: 'Up to 3 per period',
     benefits: [
       'Logo on the event page, recaps and intro slides',
       'Mention during the event opening',
@@ -136,15 +141,14 @@ export const TIERS: Tier[] = [
     prices: [
       { period: 'Single event', price: '$400' },
       { period: '3 months', price: '$950', note: '20% off' },
-      { period: '6 months', price: '$1,700', note: '30% off' },
     ],
     featured: false,
   },
 ];
 
-// The one thing a sponsor deck must say out loud, because every other deck in
-// their inbox is selling the opposite. It is why the room shows up, so it is
-// the line that protects the value of everything above it.
+// Sits as a footnote under the panels rather than as the subhead. It is still
+// the line that protects everything above it, but as a headline it made the
+// slide read as a disclaimer before it read as a price list.
 export const NO_STAGE_TIME = 'Sponsorship never buys stage time. Talks are selected on merit.';
 
 // ── Slide 07: where to find us ─────────────────────────────────────────────
