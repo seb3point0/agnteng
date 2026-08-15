@@ -65,16 +65,15 @@ export function Content() {
         ))}
       </div>
 
-      {/* Legend columns are equal width, not segment width: a label under its
-          own band is the tidier idea until the narrowest band is 20% and the
-          longest label is "Investors & others". The chip does the matching. */}
-      <div style={{ display: 'flex', width: TRACK_W, marginTop: 32 }}>
+      {/* Each label sits on the left edge of the band it names, so the bar is
+          its own legend. Equal columns were needed when the smallest segment
+          was 5% and 83px wide; at three segments the narrowest is 20%, which is
+          333px, and the colour chip that stood in for the alignment can go. */}
+      <div style={{ display: 'flex', width: TRACK_W, marginTop: 30 }}>
         {ROLES.map((r) => (
-          <div key={r.label} style={{ flex: 1, paddingRight: 24, minWidth: 0 }}>
-            <div style={{ width: 48, height: 8, borderRadius: 4, background: SEGMENT_COLOR[r.label] }} />
+          <div key={r.label} style={{ width: `${r.pct}%`, paddingRight: 24, minWidth: 0 }}>
             <div
               style={{
-                marginTop: 16,
                 fontFamily: 'var(--font-sans)',
                 fontSize: 66,
                 fontWeight: 800,

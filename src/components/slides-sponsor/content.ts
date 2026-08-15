@@ -63,7 +63,7 @@ export const ROLES = [
   { label: 'Investors & others', pct: 20 },
 ] as const;
 
-export const ROLE_TOTAL = '550 registrants across three events';
+export const ROLE_TOTAL = '550 registrants across our first three events';
 
 export const FUNNEL = [
   { label: 'Registrations', avg: 180 },
@@ -80,7 +80,7 @@ export const TRACK = {
     { title: 'Socials', body: 'GitHub, LinkedIn, X' },
     { title: 'Intent', body: 'Hiring, job seeking, raising, co-founder' },
   ],
-  note: 'Every signup is enriched from public profiles, so sponsors know which people are worth meeting before the doors open.',
+  note: 'Every signup is enriched from public profiles, so sponsors know which participants are worth meeting before the event.',
 };
 
 // ── Slide 04: event format + talk rules ────────────────────────────────────
@@ -89,20 +89,32 @@ export const FORMAT = {
   subhead: 'Three 10-minute talks, and networking',
 };
 
-// Three words each, laid out side by side. The old rules were written for
-// speakers and read as house style ("run long and we'll kindly cut you off"),
-// which is charming on a meetup slide and flippant in front of a sponsor.
-// These say the same three things as standards.
+// Laid out side by side, so each has to hold one line in a 517px column.
+// "Educational & informative" did not, and a rule that wraps stops looking like
+// a rule; the second word was carrying nothing the first did not already say.
+//
+// The originals were written for speakers and read as house style ("run long
+// and we'll kindly cut you off"), which is charming on a meetup slide and
+// flippant in front of a sponsor. These say the same three things as
+// standards.
 export const RULES = [
   { n: '01', title: 'Under 10 minutes' },
-  { n: '02', title: 'Educational & informative' },
+  { n: '02', title: 'Educational' },
   { n: '03', title: 'Technical, no pitches' },
 ];
 
 // ── Slide 05: packages ─────────────────────────────────────────────────────
+export interface Benefit {
+  text: string;
+  // Only the ask slide carries one. It is the benefit nobody can picture from
+  // its own name, and the line that turns a logo placement into a reason to
+  // buy the tier.
+  note?: string;
+}
+
 export interface Tier {
   name: string;
-  benefits: string[];
+  benefits: Benefit[];
   prices: { period: string; price: string; note?: string }[];
   featured: boolean;
 }
@@ -111,11 +123,16 @@ export const TIERS: Tier[] = [
   {
     name: 'Partner',
     benefits: [
-      'Logo on the event page, recaps and intro slides',
-      'Mention during the event opening',
-      'Merch and swag distribution at the event',
-      'One dedicated slide, presented by the organizer',
-      'Access to the enriched attendee list',
+      { text: 'Logo on the event page, recaps and intro slides' },
+      { text: 'Mention during the event opening' },
+      { text: 'Merch and swag distribution at the event' },
+      {
+        text: 'One ask slide, presented by the organizer',
+        // Held to one line at 22px in a 702px column. Two lines here is what
+        // pushed the panel into the word 'Packages'.
+        note: 'Roles you are hiring for, a raise, a partner you are seeking',
+      },
+      { text: 'Access to the enriched attendee list' },
     ],
     prices: [
       { period: 'Single event', price: '$1,000' },
@@ -126,9 +143,9 @@ export const TIERS: Tier[] = [
   {
     name: 'Community',
     benefits: [
-      'Logo on the event page, recaps and intro slides',
-      'Mention during the event opening',
-      'Merch and swag distribution at the event',
+      { text: 'Logo on the event page, recaps and intro slides' },
+      { text: 'Mention during the event opening' },
+      { text: 'Merch and swag distribution at the event' },
     ],
     prices: [
       { period: 'Single event', price: '$400' },

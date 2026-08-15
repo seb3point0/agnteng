@@ -97,21 +97,9 @@ function Panel({ tier }: { tier: Tier }) {
         {tier.name}
       </div>
 
-      <ul style={{ margin: '22px 0 0', padding: 0, listStyle: 'none' }}>
+      <ul style={{ margin: '18px 0 0', padding: 0, listStyle: 'none' }}>
         {tier.benefits.map((b) => (
-          <li
-            key={b}
-            style={{
-              display: 'flex',
-              gap: 20,
-              marginTop: 14,
-              fontFamily: 'var(--font-sans)',
-              fontSize: 27,
-              fontWeight: 500,
-              lineHeight: 1.3,
-              color: 'rgba(244,245,255,0.82)',
-            }}
-          >
+          <li key={b.text} style={{ display: 'flex', gap: 20, marginTop: 13 }}>
             <span
               style={{
                 flex: 'none',
@@ -121,15 +109,47 @@ function Panel({ tier }: { tier: Tier }) {
                 background: C.brightBlue,
               }}
             />
-            <span>{b}</span>
+            <span style={{ minWidth: 0 }}>
+              <span
+                style={{
+                  display: 'block',
+                  fontFamily: 'var(--font-sans)',
+                  fontSize: 27,
+                  fontWeight: 500,
+                  lineHeight: 1.3,
+                  color: 'rgba(244,245,255,0.82)',
+                }}
+              >
+                {b.text}
+              </span>
+              {b.note && (
+                <span
+                  style={{
+                    display: 'block',
+                    marginTop: 6,
+                    fontFamily: 'var(--font-sans)',
+                    fontSize: 22,
+                    fontWeight: 500,
+                    lineHeight: 1.3,
+                    color: 'rgba(244,245,255,0.5)',
+                  }}
+                >
+                  {b.note}
+                </span>
+              )}
+            </span>
           </li>
         ))}
       </ul>
 
+      {/* The discount sits on the price's own baseline rather than under it.
+          Stacked, it made the strip three rows deep and pushed the whole block
+          up against the last perk; beside the number it is also where a reader
+          comparing two prices is already looking. */}
       <div
         style={{
           marginTop: 'auto',
-          paddingTop: 26,
+          paddingTop: 38,
           borderTop: '1px solid rgba(244,245,255,0.14)',
           display: 'flex',
           gap: 32,
@@ -140,7 +160,7 @@ function Panel({ tier }: { tier: Tier }) {
             <div
               style={{
                 fontFamily: 'var(--font-mono)',
-                fontSize: 21,
+                fontSize: 20,
                 letterSpacing: '0.08em',
                 textTransform: 'uppercase',
                 color: 'rgba(244,245,255,0.5)',
@@ -148,23 +168,22 @@ function Panel({ tier }: { tier: Tier }) {
             >
               {p.period}
             </div>
-            <div
-              style={{
-                marginTop: 12,
-                fontFamily: 'var(--font-sans)',
-                fontSize: 50,
-                fontWeight: 800,
-                letterSpacing: '-0.02em',
-                color: C.white,
-              }}
-            >
-              {p.price}
+            <div style={{ display: 'flex', alignItems: 'baseline', gap: 16, marginTop: 10 }}>
+              <span
+                style={{
+                  fontFamily: 'var(--font-sans)',
+                  fontSize: 48,
+                  fontWeight: 800,
+                  letterSpacing: '-0.02em',
+                  color: C.white,
+                }}
+              >
+                {p.price}
+              </span>
+              {p.note && (
+                <span style={{ fontFamily: 'var(--font-mono)', fontSize: 21, color: C.periwinkle }}>{p.note}</span>
+              )}
             </div>
-            {p.note && (
-              <div style={{ marginTop: 8, fontFamily: 'var(--font-mono)', fontSize: 22, color: C.periwinkle }}>
-                {p.note}
-              </div>
-            )}
           </div>
         ))}
       </div>
