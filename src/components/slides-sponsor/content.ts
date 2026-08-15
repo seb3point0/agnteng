@@ -245,10 +245,12 @@ export const TIERS: Tier[] = [
 // limited, which is what the deleted "exclusive, 1 per period" labels were
 // doing badly: scarcity stated as a policy reads as principle, stated as a
 // badge next to a price it reads as a sales tactic.
-export const FOOTNOTES = [
-  'We keep sponsorships small and well-matched, with partners who see value in being part of this community.',
-  'Sponsorship never buys stage time. Talks are selected on merit.',
-];
+// One paragraph, not two stacked lines. As separate blocks the second sentence
+// read as a caveat appended to the first; run together they are one statement
+// of terms, and the whole thing sets in two lines instead of three, which the
+// panels underneath get to keep.
+export const TERMS =
+  'We keep sponsorships small and well-matched, with partners who see value in being part of this community. Sponsorship never buys stage time. Talks are selected on merit.';
 
 // ── Slide 06: the close ────────────────────────────────────────────────────
 // The deck used to end on the meetup deck's "Where to find us": three QR codes

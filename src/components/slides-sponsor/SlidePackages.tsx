@@ -1,6 +1,6 @@
 import { C, PAD, type SlideProps } from '../slides/deck';
 import { Backdrop, Frame, Headline, Subhead } from '../slides/parts';
-import { FOOTNOTES, TIERS, type Tier } from './content';
+import { TERMS, TIERS, type Tier } from './content';
 
 // ─────────────────────────────────────────────────────────────────────────
 // 06 — Packages. Two panels, prices aligned across both.
@@ -23,7 +23,7 @@ import { FOOTNOTES, TIERS, type Tier } from './content';
 // one still line their numbers up. That row is what gets compared; it should
 // not move because the list above it is longer.
 //
-// The two footnotes are the site's own partner copy. The first explains why
+// The terms are the site's own partner copy. The first sentence explains why
 // the tiers are limited, which is the job the deleted "exclusive, 1 per
 // period" labels were doing badly: scarcity stated as a policy reads as a
 // principle, stated beside a price it reads as a tactic.
@@ -46,13 +46,7 @@ export function Content() {
           they are read before the prices rather than found after them, which is
           the right order: how we pick partners, and what sponsorship does not
           buy, are the terms the numbers sit inside. */}
-      <div style={{ marginTop: 24 }}>
-        {FOOTNOTES.map((f) => (
-          <Subhead key={f} style={{ margin: '8px 0 0', lineHeight: 1.32, maxWidth: TRACK_W }}>
-            {f}
-          </Subhead>
-        ))}
-      </div>
+      <Subhead style={{ margin: '24px 0 0', lineHeight: 1.32, maxWidth: TRACK_W }}>{TERMS}</Subhead>
 
       <div style={{ display: 'flex', gap: GAP, marginTop: 'auto' }}>
         {TIERS.map((t) => (
