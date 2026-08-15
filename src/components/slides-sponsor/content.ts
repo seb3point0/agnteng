@@ -103,10 +103,17 @@ export const RULES = [
   { n: '03', title: 'Technical, no pitches' },
 ];
 
-// Talks from past events, sitting beside the rules as the proof of them. The
-// thumbnails are downloaded rather than hotlinked from img.youtube.com: a deck
-// is opened in venues with hostile wifi, and a rule about talks illustrated by
+// Talks from past events, sitting beside the rules as the proof of them.
+//
+// The stills are our own photographs of each talk, not YouTube's auto-generated
+// thumbnails, which are a frame the encoder picked and looked it. They are also
+// local files rather than anything fetched at render time: a deck gets opened
+// in venues with hostile wifi, and a rule about talk quality illustrated by
 // three broken images is worse than no illustration.
+//
+// They are 4:3 and the cards are 16:9, so each is centre-cropped by objectFit.
+// Check the crop when swapping one in; a speaker near the top or bottom edge
+// loses their head to it.
 export interface Talk {
   id: string;
   title: string;
@@ -119,7 +126,29 @@ export const TALKS: Talk[] = [
   { id: 'uZo2NWtdfsc', title: 'Harness the Harness', speaker: 'Juan Cruz Fortunatti' },
 ];
 
-export const talkThumb = (id: string) => `/assets/talks/${id}.jpg`;
+// Imported, not referenced by path out of public/. An asset in public/ ships at
+// a stable URL, so replacing one leaves Cloudflare serving the previous bytes
+// for its full max-age (four hours here) and the deploy looks like it silently
+// did nothing. That is exactly what happened the first time these were swapped.
+// Through the bundler each file gets a content-hashed name, so changing the
+// image changes the URL and no cache anywhere can hold the old one.
+//
+// Astro hands back ImageMetadata for images under src/; a plain Vite build
+// hands back a string. Take whichever arrived.
+import misha from '../../assets/talks/KSmPCenbWJk.jpg';
+import alex from '../../assets/talks/KRzbyKm1thI.jpg';
+import juan from '../../assets/talks/uZo2NWtdfsc.jpg';
+
+type Imported = string | { src: string };
+const url = (m: Imported) => (typeof m === 'string' ? m : m.src);
+
+const THUMBS: Record<string, Imported> = {
+  KSmPCenbWJk: misha,
+  KRzbyKm1thI: alex,
+  uZo2NWtdfsc: juan,
+};
+
+export const talkThumb = (id: string) => url(THUMBS[id]);
 export const talkUrl = (id: string) => `https://www.youtube.com/watch?v=${id}`;
 
 // ── Slide 05: packages ─────────────────────────────────────────────────────
