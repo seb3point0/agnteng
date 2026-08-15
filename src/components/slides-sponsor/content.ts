@@ -26,8 +26,14 @@ export const TITLE = {
 // footprint. The cards underneath say where, for anyone counting.
 export const COMMUNITY = {
   headline: 'The room for agentic engineering',
+  // The Substack's own description of itself, verbatim, plus one factual line.
+  // The previous version borrowed the website's "turning agents into an unfair
+  // advantage", which is hero copy written to sell a signup; in a sponsor deck
+  // it is the one sentence that sounds like marketing rather than like the
+  // people who run this. "Comparing what actually works in production" was
+  // invented outright and described no event that has happened.
   subhead:
-    'A community of engineers and founders turning agents into an unfair advantage. Monthly, in person, comparing what actually works in production.',
+    'For people building software, infrastructure and companies with agentic workflows. Monthly, in person, since May 2026.',
 };
 
 export interface PastEvent {
@@ -86,7 +92,10 @@ export const TRACK = {
 // ── Slide 04: event format + talk rules ────────────────────────────────────
 export const FORMAT = {
   headline: 'Event format',
-  subhead: 'Three 10-minute talks, and networking',
+  // "Lightning talks" is the recaps' own word for these. "Three 10-minute
+  // talks, and networking" also had a comma splicing two nouns, which reads as
+  // a list that lost its last item.
+  subhead: 'Three 10-minute lightning talks, then drinks and networking',
 };
 
 // Laid out side by side, so each has to hold one line in a 517px column.
@@ -203,11 +212,32 @@ export const TIERS: Tier[] = [
   },
 ];
 
-// Sits as a footnote under the panels rather than as the subhead. It is still
-// the line that protects everything above it, but as a headline it made the
-// slide read as a disclaimer before it read as a price list.
-export const NO_STAGE_TIME = 'Sponsorship never buys stage time. Talks are selected on merit.';
+// Footnotes under the panels rather than a subhead: still the lines that
+// protect everything above them, but as a headline they made the slide read as
+// a disclaimer before it read as a price list.
+//
+// The first is the site's own partner copy. It explains why the tiers are
+// limited, which is what the deleted "exclusive, 1 per period" labels were
+// doing badly: scarcity stated as a policy reads as principle, stated as a
+// badge next to a price it reads as a sales tactic.
+export const FOOTNOTES = [
+  'We keep sponsorships small and well-matched. A few partners who actually want to be there.',
+  'Sponsorship never buys stage time. Talks are selected on merit.',
+];
 
-// Slide 06 is the meetup deck's closing slide, reused as-is. Its LINKS live in
-// ../slides/deck.ts; a second copy here was dead the moment SponsorDeck started
-// importing the component rather than rebuilding it.
+// ── Slide 06: the close ────────────────────────────────────────────────────
+// The deck used to end on the meetup deck's "Where to find us": three QR codes
+// for Telegram, Substack and YouTube. That is the right close for a room full
+// of attendees and the wrong one for a sponsor, who has just read a price list
+// and has no way to reply to it. A deck that never asks for anything does not
+// get answered.
+//
+// Headline and subhead are the site's own partner section, so the deck lands on
+// the same words a sponsor finds if they go looking. The em dash in the
+// original is a comma here.
+export const CLOSE = {
+  headline: 'Partner with us',
+  subhead:
+    'Back the room where agents get built. We keep sponsorships small and well-matched, a few partners who actually want to be there.',
+  email: 'partners@agnteng.com',
+};

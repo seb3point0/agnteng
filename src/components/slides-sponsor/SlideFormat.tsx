@@ -21,11 +21,13 @@ import { FORMAT, RULES, TALKS, type Talk, talkThumb, talkUrl } from './content';
 // their own cursor because the deck hides it once a presentation starts.
 // ─────────────────────────────────────────────────────────────────────────
 
-const COL_GAP = 80;
-// 520, not 440: 'Technical, no pitches' at 40px needs ~420 beside a 52px
-// number column, and a rule that wraps stops looking like a rule.
-const RULES_W = 520;
-const TALK_GAP = 32;
+const COL_GAP = 72;
+// 540 against a 40px rule: "Technical, no pitches" needs ~420 beside a 56px
+// number column and its gap, and a rule that wraps stops looking like a rule.
+// Raising the type to 44 to fill the column is what broke it the second time;
+// the column has to grow with the type or not at all.
+const RULES_W = 540;
+const TALK_GAP = 28;
 const TALK_W = (1920 - PAD * 2 - RULES_W - COL_GAP - TALK_GAP * (TALKS.length - 1)) / TALKS.length;
 const TALK_H = Math.round((TALK_W * 9) / 16);
 
@@ -37,20 +39,22 @@ export function Content({ active }: SlideProps) {
   return (
     <Frame>
       <Headline>{FORMAT.headline}</Headline>
-      <Subhead style={{ margin: '32px 0 0', fontSize: 48, color: C.white }}>{FORMAT.subhead}</Subhead>
+      <Subhead style={{ margin: '30px 0 0', fontSize: 44, maxWidth: 1240, color: C.white }}>
+        {FORMAT.subhead}
+      </Subhead>
 
       <div style={{ display: 'flex', gap: COL_GAP, marginTop: 'auto' }}>
         <div style={{ width: RULES_W, flex: 'none' }}>
           <div style={LABEL}>Talk rules</div>
           {RULES.map((r) => (
-            <div key={r.n} style={{ display: 'flex', alignItems: 'baseline', gap: 24, marginTop: 26 }}>
+            <div key={r.n} style={{ display: 'flex', alignItems: 'baseline', gap: 24, marginTop: 40 }}>
               <span
                 style={{
                   fontFamily: 'var(--font-mono)',
-                  fontSize: 26,
+                  fontSize: 28,
                   fontWeight: 600,
                   color: C.periwinkle,
-                  width: 52,
+                  width: 56,
                   flex: 'none',
                 }}
               >
@@ -74,7 +78,7 @@ export function Content({ active }: SlideProps) {
 
         <div style={{ flex: 1, minWidth: 0 }}>
           <div style={LABEL}>Talks from past events</div>
-          <div style={{ display: 'flex', gap: TALK_GAP, marginTop: 26 }}>
+          <div style={{ display: 'flex', gap: TALK_GAP, marginTop: 30 }}>
             {TALKS.map((t) => (
               <TalkCard key={t.id} talk={t} active={active} />
             ))}
@@ -130,11 +134,16 @@ function TalkCard({ talk, active }: { talk: Talk; active: boolean }) {
         <PlayBadge />
       </div>
 
+      {/* Two lines' worth of height whether the title needs it or not, so the
+          three speaker names sit on one baseline. One title wrapping and the
+          others not is the kind of half-pixel wrongness that reads as careless
+          without anyone being able to say why. */}
       <div
         style={{
           marginTop: 16,
+          height: 27 * 1.22 * 2,
           fontFamily: 'var(--font-sans)',
-          fontSize: 25,
+          fontSize: 27,
           fontWeight: 700,
           lineHeight: 1.22,
           letterSpacing: '-0.01em',
@@ -145,9 +154,9 @@ function TalkCard({ talk, active }: { talk: Talk; active: boolean }) {
       </div>
       <div
         style={{
-          marginTop: 6,
+          marginTop: 2,
           fontFamily: 'var(--font-mono)',
-          fontSize: 20,
+          fontSize: 21,
           color: 'rgba(244,245,255,0.55)',
         }}
       >

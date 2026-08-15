@@ -1,6 +1,6 @@
 import { C, PAD, type SlideProps } from '../slides/deck';
 import { Backdrop, Frame, Headline } from '../slides/parts';
-import { NO_STAGE_TIME, TIERS, type Tier } from './content';
+import { FOOTNOTES, TIERS, type Tier } from './content';
 
 // ─────────────────────────────────────────────────────────────────────────
 // 06 — Packages. Two panels, prices aligned across both.
@@ -23,9 +23,10 @@ import { NO_STAGE_TIME, TIERS, type Tier } from './content';
 // one still line their numbers up. That row is what gets compared; it should
 // not move because the list above it is longer.
 //
-// "Never buys stage time" is a footnote under both panels. As the subhead it
-// pushed the panels down into the space they needed, and made the slide read
-// as a disclaimer before it read as a price list.
+// The two footnotes are the site's own partner copy. The first explains why
+// the tiers are limited, which is the job the deleted "exclusive, 1 per
+// period" labels were doing badly: scarcity stated as a policy reads as a
+// principle, stated beside a price it reads as a tactic.
 // ─────────────────────────────────────────────────────────────────────────
 
 const GAP = 44;
@@ -47,17 +48,23 @@ export function Content() {
           ))}
         </div>
 
-        <p
-          style={{
-            margin: '32px 0 0',
-            fontFamily: 'var(--font-sans)',
-            fontSize: 26,
-            fontWeight: 500,
-            color: 'rgba(244,245,255,0.55)',
-          }}
-        >
-          {NO_STAGE_TIME}
-        </p>
+        <div style={{ marginTop: 26 }}>
+          {FOOTNOTES.map((f) => (
+            <p
+              key={f}
+              style={{
+                margin: '5px 0 0',
+                fontFamily: 'var(--font-sans)',
+                fontSize: 23,
+                lineHeight: 1.3,
+                fontWeight: 500,
+                color: 'rgba(244,245,255,0.55)',
+              }}
+            >
+              {f}
+            </p>
+          ))}
+        </div>
       </div>
     </Frame>
   );
@@ -76,7 +83,7 @@ function Panel({ tier }: { tier: Tier }) {
         // than Partner's real height, so it did nothing except hide the fact
         // that the panel had grown past the space between the headline and the
         // footnote — and the panels overlapped "Packages".
-        padding: 38,
+        padding: 34,
         borderRadius: 24,
         // Both panels are opaque. A translucent blue tint on the featured one
         // let the field through and made the more expensive package look like
@@ -97,9 +104,9 @@ function Panel({ tier }: { tier: Tier }) {
         {tier.name}
       </div>
 
-      <ul style={{ margin: '18px 0 0', padding: 0, listStyle: 'none' }}>
+      <ul style={{ margin: '16px 0 0', padding: 0, listStyle: 'none' }}>
         {tier.benefits.map((b) => (
-          <li key={b.text} style={{ display: 'flex', gap: 20, marginTop: 13 }}>
+          <li key={b.text} style={{ display: 'flex', gap: 20, marginTop: 12 }}>
             <span
               style={{
                 flex: 'none',
@@ -149,7 +156,7 @@ function Panel({ tier }: { tier: Tier }) {
       <div
         style={{
           marginTop: 'auto',
-          paddingTop: 52,
+          paddingTop: 44,
           display: 'flex',
           gap: 32,
         }}

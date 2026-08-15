@@ -5,7 +5,7 @@ import * as Community from './SlideCommunity';
 import * as Audience from './SlideAudience';
 import * as Format from './SlideFormat';
 import * as Packages from './SlidePackages';
-import * as Links from '../slides/SlideLinks';
+import * as Close from './SlideClose';
 
 // ─────────────────────────────────────────────────────────────────────────
 // The sponsorship deck. Same engine and same primitives as the meetup deck;
@@ -15,12 +15,14 @@ import * as Links from '../slides/SlideLinks';
 // we know about them, here is how the evening works, and only then what it
 // costs. Packages before the audience would make it a rate card.
 //
-// Links is the meetup deck's closing slide reused verbatim. Telegram and
-// Substack are the same two places whoever is reading this should go, and a
-// second copy would be one more thing to update when a URL changes.
+// The close is this deck's own, not the meetup deck's "Where to find us". The
+// channels are still on it, but a sponsor who has just read a price list needs
+// an address to reply to, and three QR codes for a Telegram group is not one.
+// The meetup deck keeps the shared slide unchanged; its audience is in the
+// room already.
 // ─────────────────────────────────────────────────────────────────────────
 
-const SLIDES: Slide[] = [Title, Community, Audience, Format, Packages, Links];
+const SLIDES: Slide[] = [Title, Community, Audience, Format, Packages, Close];
 
 export default function SponsorDeck() {
   return <DeckEngine slides={SLIDES} />;

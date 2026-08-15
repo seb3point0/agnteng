@@ -25,8 +25,9 @@ const GAP = 40;
 const CARD_W = (1920 - PAD * 2 - GAP * (EVENTS.length - 1)) / EVENTS.length;
 // Taller than the meetup deck's 0.588. With the attendance line gone the cards
 // no longer reached far enough up the stage, and the slide read as a headline
-// with a strip of photos parked at the bottom.
-const CARD_H = Math.round(CARD_W * 0.66);
+// with a strip of photos parked at the bottom. These are the argument, so they
+// get the room.
+const CARD_H = Math.round(CARD_W * 0.74);
 
 export function Background({ active }: SlideProps) {
   return <Backdrop fade="radial" motion={22} paused={!active} />;
