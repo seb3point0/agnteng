@@ -67,9 +67,22 @@ export const EVENTS: PastEvent[] = [
 ];
 
 // ── Slide 03: where to find us ─────────────────────────────────────────────
+// `url` is what gets printed; `href` is what a click follows. They differ only
+// by the scheme, which is noise on a slide and required in an anchor.
 export const LINKS = [
-  { name: 'Telegram', url: 't.me/agntacc', qr: '/assets/qr/telegram.svg' },
-  { name: 'Substack', url: 'agnteng.substack.com', qr: '/assets/qr/substack.svg' },
+  { name: 'Telegram', url: 't.me/agntacc', href: 'https://t.me/agntacc', qr: '/assets/qr/telegram.svg' },
+  {
+    name: 'Substack',
+    url: 'agnteng.substack.com',
+    href: 'https://agnteng.substack.com',
+    qr: '/assets/qr/substack.svg',
+  },
+  {
+    name: 'YouTube',
+    url: 'youtube.com/@agnteng',
+    href: 'https://www.youtube.com/@agnteng',
+    qr: '/assets/qr/youtube.svg',
+  },
 ];
 
 // ── Slide 04: how to contribute ────────────────────────────────────────────

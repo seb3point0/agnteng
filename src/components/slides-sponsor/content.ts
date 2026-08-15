@@ -208,8 +208,6 @@ export const TIERS: Tier[] = [
 // slide read as a disclaimer before it read as a price list.
 export const NO_STAGE_TIME = 'Sponsorship never buys stage time. Talks are selected on merit.';
 
-// ── Slide 06: where to find us ─────────────────────────────────────────────
-export const LINKS = [
-  { name: 'Telegram', url: 't.me/agntacc', qr: '/assets/qr/telegram.svg' },
-  { name: 'Substack', url: 'agnteng.substack.com', qr: '/assets/qr/substack.svg' },
-];
+// Slide 06 is the meetup deck's closing slide, reused as-is. Its LINKS live in
+// ../slides/deck.ts; a second copy here was dead the moment SponsorDeck started
+// importing the component rather than rebuilding it.
