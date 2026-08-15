@@ -43,7 +43,7 @@ export function Content({ active }: SlideProps) {
   return (
     <Frame>
       <Headline>{FORMAT.headline}</Headline>
-      <Subhead style={{ margin: '30px 0 0', fontSize: 44, maxWidth: 1240, color: C.white }}>
+      <Subhead style={{ margin: '30px 0 0', maxWidth: 1240 }}>
         {FORMAT.subhead}
       </Subhead>
 

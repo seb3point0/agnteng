@@ -37,7 +37,7 @@ export function Content() {
   return (
     <Frame>
       <Headline>{COMMUNITY.headline}</Headline>
-      <Subhead style={{ fontSize: 36, lineHeight: 1.34, maxWidth: 1380 }}>{COMMUNITY.subhead}</Subhead>
+      <Subhead style={{ lineHeight: 1.34, maxWidth: 1380 }}>{COMMUNITY.subhead}</Subhead>
 
       <div style={{ display: 'flex', gap: GAP, marginTop: 'auto' }}>
         {EVENTS.map((e) => (

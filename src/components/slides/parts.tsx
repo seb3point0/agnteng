@@ -100,9 +100,13 @@ export function Subhead({ children, style }: { children: ReactNode; style?: CSSP
       style={{
         margin: '28px 0 0',
         fontFamily: 'var(--font-sans)',
-        fontSize: 40,
+        // One size and one colour for every description in both decks. They had
+        // drifted to five sizes between 30 and 44 and two colours, so the line
+        // under the title changed weight from slide to slide and read as five
+        // different kinds of thing rather than one.
+        fontSize: 34,
         fontWeight: 500,
-        color: 'rgba(244,245,255,0.62)',
+        color: C.white,
         ...style,
       }}
     >

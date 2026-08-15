@@ -1,6 +1,6 @@
 import { C, PAD, type SlideProps } from '../slides/deck';
 import { Backdrop, Frame, Headline, Subhead } from '../slides/parts';
-import { COLLECT, INTENT, ROLE_TOTAL, ROLES, STATS, TRACK_NOTE } from './content';
+import { COLLECT, INTENT, ROLE_TOTAL, ROLES, STATS } from './content';
 
 // ─────────────────────────────────────────────────────────────────────────
 // 03 — Who is in the room.
@@ -28,6 +28,11 @@ import { COLLECT, INTENT, ROLE_TOTAL, ROLES, STATS, TRACK_NOTE } from './content
 // to. Intent leads the two lists because it is the part a sponsor cannot get
 // anywhere else — every event can tell you someone's job title, and none of
 // them can tell you that person turned up looking for a co-founder.
+//
+// The three columns take the only auto margin now that the footnote is gone,
+// so every spare pixel opens the gap between the legend and them — the space
+// grows with the slide instead of being pinned to a number that goes stale the
+// next time the content changes.
 //
 // Every box sets flexShrink: 0. The Frame is a flex column, so without it a
 // slide that outgrows the stage silently thins its own bar instead of
@@ -69,7 +74,7 @@ export function Content() {
   return (
     <Frame>
       <Headline>Who&rsquo;s in the room</Headline>
-      <Subhead style={{ margin: '18px 0 0', fontSize: 36 }}>{ROLE_TOTAL}</Subhead>
+      <Subhead style={{ margin: '18px 0 0' }}>{ROLE_TOTAL}</Subhead>
 
       {/* one whole, divided */}
       <div
@@ -78,7 +83,7 @@ export function Content() {
           width: TRACK_W,
           height: BAR_H,
           flexShrink: 0,
-          marginTop: 56,
+          marginTop: 90,
           borderRadius: 10,
           overflow: 'hidden',
         }}
@@ -199,20 +204,6 @@ export function Content() {
       {/* A second auto margin. With only the band claiming one, every spare
           pixel piled up above it and the note sat tight against the columns;
           split between the two, the footnote reads as a footnote. */}
-      <p
-        style={{
-          marginTop: 'auto',
-          marginBottom: 0,
-          flexShrink: 0,
-          fontFamily: 'var(--font-sans)',
-          fontSize: 25,
-          fontWeight: 500,
-          lineHeight: 1.35,
-          color: 'rgba(244,245,255,0.55)',
-        }}
-      >
-        {TRACK_NOTE}
-      </p>
     </Frame>
   );
 }

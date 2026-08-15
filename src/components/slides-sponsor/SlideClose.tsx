@@ -31,7 +31,7 @@ export function Content({ active }: SlideProps) {
       {/* Wide enough for two lines. At 1180 it broke into three and hyphenated
           "high-signal" across the turn, which is the one word on the slide that
           has to read as one. */}
-      <Subhead style={{ margin: '24px 0 0', fontSize: 34, lineHeight: 1.34, maxWidth: 1520 }}>
+      <Subhead style={{ margin: '24px 0 0', lineHeight: 1.34, maxWidth: 1520 }}>
         {CLOSE.subhead}
       </Subhead>
 

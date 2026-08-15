@@ -92,13 +92,20 @@ export const STATS = {
 // because it is the part a sponsor cannot get anywhere else: every other event
 // can tell you someone's job title, and none of them can tell you that person
 // came looking for a co-founder.
+// Ordered by what it costs a sponsor to reach these people anywhere else, not
+// by how many of them there are. Someone job seeking or starting a company is
+// findable; someone who came looking for a co-founder is not, so it anchors the
+// list rather than opening it.
 export const INTENT = {
   label: 'Intent they tell us',
-  items: ['Hiring', 'Job seeking', 'Raising', 'Starting a company', 'Looking for a co-founder'],
+  items: ['Job seeking', 'Starting a company', 'Raising funds', 'Hiring', 'Looking for a co-founder'],
 };
 
+// "& enrich" belongs in the label. As a sentence underneath it was a fourth
+// idea competing with three columns; as two words in the heading it is the same
+// claim, read at the same moment as the list it describes.
 export const COLLECT = {
-  label: 'What we collect',
+  label: 'What we collect & enrich',
   items: [
     { name: 'Company' },
     { name: 'Role' },
@@ -106,9 +113,6 @@ export const COLLECT = {
     { name: 'Socials', detail: 'GitHub, LinkedIn, X' },
   ],
 };
-
-export const TRACK_NOTE =
-  'We enrich every signup from public profiles, so sponsors know who is worth meeting before the doors open.';
 
 // ── Slide 04: event format + talk rules ────────────────────────────────────
 export const FORMAT = {

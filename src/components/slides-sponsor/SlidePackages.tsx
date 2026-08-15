@@ -48,7 +48,7 @@ export function Content() {
           buy, are the terms the numbers sit inside. */}
       <div style={{ marginTop: 24 }}>
         {FOOTNOTES.map((f) => (
-          <Subhead key={f} style={{ margin: '8px 0 0', fontSize: 30, lineHeight: 1.32, maxWidth: TRACK_W }}>
+          <Subhead key={f} style={{ margin: '8px 0 0', lineHeight: 1.32, maxWidth: TRACK_W }}>
             {f}
           </Subhead>
         ))}
