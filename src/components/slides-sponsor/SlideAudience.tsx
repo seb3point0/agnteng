@@ -1,35 +1,42 @@
 import { C, PAD, type SlideProps } from '../slides/deck';
 import { Backdrop, Frame, Headline, Subhead } from '../slides/parts';
-import { ROLE_TOTAL, ROLES, STATS, TRACK } from './content';
+import { COLLECT, INTENT, ROLE_TOTAL, ROLES, STATS, TRACK_NOTE } from './content';
 
 // ─────────────────────────────────────────────────────────────────────────
-// 03 — Who is in the room, and what we know about them.
+// 03 — Who is in the room.
 //
-// This was two slides. The mix and the data are one answer to one question a
-// sponsor is asking, and splitting them meant the second slide opened with a
-// headline that repeated the first. Together they fit, because neither half
-// needs more than a third of the stage.
+// Two questions, answered in order down the slide. Who are these people: one
+// bar divided three ways, because they are shares of one whole and separate
+// bars would encode "how big is each", which is not what a sponsor is asking.
+// Then, can I reach the right ones: three columns across the bottom.
 //
-// Percentages of one whole, so one bar divided into three, not three bars.
-// Separate bars encode "how big is each", which is not the question; a divided
-// bar encodes "what is this room made of", which is. It also makes the three
-// numbers visibly sum to everything, so nothing looks omitted.
+// Those three columns are the third attempt at this band, so the two failures
+// are worth writing down.
 //
-// The bottom half is two stacked bands, not two side-by-side columns. Side by
-// side, "what we track" had a third of the stage for three columns, so its
-// third line wrapped while the other two did not, and the block that was meant
-// to look like a tidy schema looked like a table that had outgrown its box.
-// Full width, all three fit on one line each and the two bands read as two
-// answers rather than as one crowded one.
+// Side by side as headings-with-explanations, one heading had no explanation
+// and the row read as a field somebody forgot to fill in. Writing a subtitle
+// for it only moved the problem: the slide was then explaining the word
+// "Company" to people who buy sponsorships.
+//
+// Stacked full width, every column got its line and the slide grew a bigger
+// hole down the right-hand side instead, because two short lists cannot fill
+// 1664px however they are arranged.
+//
+// What fixes it is that the three columns are three different SHAPES rather
+// than three instances of one shape: two numbers, a list, a list with a
+// trailing detail. Nothing has to line up with anything, so nothing can fail
+// to. Intent leads the two lists because it is the part a sponsor cannot get
+// anywhere else — every event can tell you someone's job title, and none of
+// them can tell you that person turned up looking for a co-founder.
+//
+// Every box sets flexShrink: 0. The Frame is a flex column, so without it a
+// slide that outgrows the stage silently thins its own bar instead of
+// overflowing, and the gutter check sees nothing wrong.
 // ─────────────────────────────────────────────────────────────────────────
 
 const TRACK_W = 1920 - PAD * 2;
-// Every box on this slide sets flexShrink: 0. The Frame is a flex column, so
-// when the content outgrew the stage the bar simply got thinner instead of
-// overflowing, which the gutter check cannot see and the eye reads as a design
-// choice. With shrinking off, too much content pushes past the bottom padding
-// and the measurement catches it.
 const BAR_H = 72;
+const COL_GAP = 88;
 
 const SEGMENT_COLOR: Record<string, string> = {
   Founders: C.brightBlue,
@@ -43,6 +50,15 @@ const MONO_LABEL = {
   letterSpacing: '0.18em',
   textTransform: 'uppercase' as const,
   color: C.periwinkle,
+};
+
+const LIST_ROW = {
+  marginTop: 14,
+  fontFamily: 'var(--font-sans)',
+  fontSize: 27,
+  fontWeight: 600,
+  lineHeight: 1.2,
+  color: 'rgba(244,245,255,0.88)',
 };
 
 export function Background({ active }: SlideProps) {
@@ -73,9 +89,7 @@ export function Content() {
       </div>
 
       {/* Each label sits on the left edge of the band it names, so the bar is
-          its own legend. Equal columns were needed when the smallest segment
-          was 5% and 83px wide; at three segments the narrowest is 20%, which is
-          333px, and the colour chip that stood in for the alignment can go. */}
+          its own legend. */}
       <div style={{ display: 'flex', width: TRACK_W, flexShrink: 0, marginTop: 20 }}>
         {ROLES.map((r) => (
           <div key={r.label} style={{ width: `${r.pct}%`, paddingRight: 24, minWidth: 0 }}>
@@ -106,91 +120,86 @@ export function Content() {
         ))}
       </div>
 
-      {/* No rules anywhere on this slide. A hairline on a field that is itself
-          made of dots reads as another row of dots, and the whitespace was
-          already doing the separating. */}
-      <div style={{ marginTop: 'auto', flexShrink: 0 }}>
-        <div style={MONO_LABEL}>{STATS.label}</div>
-        <div style={{ display: 'flex', gap: 80, marginTop: 14 }}>
-          {STATS.items.map((it, i) => (
-            <Stat key={it.label} label={it.label} n={it.n} emphasis={i === STATS.items.length - 1} />
-          ))}
+      <div style={{ display: 'flex', gap: COL_GAP, flexShrink: 0, marginTop: 'auto' }}>
+        <div style={{ flex: 3, minWidth: 0 }}>
+          <div style={MONO_LABEL}>{STATS.label}</div>
+          <div style={{ display: 'flex', gap: 56, marginTop: 18 }}>
+            {STATS.items.map((it, i) => (
+              <div key={it.label}>
+                <div
+                  style={{
+                    fontFamily: 'var(--font-sans)',
+                    fontSize: 64,
+                    fontWeight: 800,
+                    lineHeight: 1,
+                    letterSpacing: '-0.03em',
+                    color: i === STATS.items.length - 1 ? C.brightBlue : C.white,
+                  }}
+                >
+                  {it.n}
+                </div>
+                <div
+                  style={{
+                    marginTop: 10,
+                    fontFamily: 'var(--font-sans)',
+                    fontSize: 25,
+                    fontWeight: 500,
+                    color: 'rgba(244,245,255,0.62)',
+                  }}
+                >
+                  {it.label}
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
 
-        <div style={{ ...MONO_LABEL, marginTop: 36 }}>{TRACK.label}</div>
-        <div style={{ display: 'flex', width: TRACK_W, gap: 56, marginTop: 14 }}>
-          {TRACK.items.map((it) => (
-            <div key={it.title} style={{ flex: 1, minWidth: 0 }}>
-              <div
-                style={{
-                  fontFamily: 'var(--font-sans)',
-                  fontSize: 32,
-                  fontWeight: 700,
-                  letterSpacing: '-0.02em',
-                  color: C.white,
-                }}
-              >
-                {it.title}
-              </div>
-              <div
-                style={{
-                  marginTop: 8,
-                  fontFamily: 'var(--font-sans)',
-                  fontSize: 24,
-                  fontWeight: 500,
-                  lineHeight: 1.3,
-                  color: 'rgba(244,245,255,0.62)',
-                }}
-              >
-                {it.body}
-              </div>
+        <div style={{ flex: 4, minWidth: 0 }}>
+          <div style={MONO_LABEL}>{INTENT.label}</div>
+          {INTENT.items.map((it) => (
+            <div key={it} style={LIST_ROW}>
+              {it}
             </div>
           ))}
         </div>
 
-        <p
-          style={{
-            margin: '20px 0 0',
-            fontFamily: 'var(--font-sans)',
-            fontSize: 25,
-            fontWeight: 500,
-            lineHeight: 1.35,
-            color: 'rgba(244,245,255,0.55)',
-          }}
-        >
-          {TRACK.note}
-        </p>
+        <div style={{ flex: 4, minWidth: 0 }}>
+          <div style={MONO_LABEL}>{COLLECT.label}</div>
+          {COLLECT.items.map((it) => (
+            <div key={it.name} style={{ ...LIST_ROW, display: 'flex', alignItems: 'baseline', gap: 16 }}>
+              <span>{it.name}</span>
+              {/* The platforms ride along on the same line rather than becoming
+                  three more rows. They are one field, not three. */}
+              {it.detail && (
+                <span
+                  style={{
+                    fontFamily: 'var(--font-mono)',
+                    fontSize: 21,
+                    fontWeight: 400,
+                    color: 'rgba(244,245,255,0.5)',
+                  }}
+                >
+                  {it.detail}
+                </span>
+              )}
+            </div>
+          ))}
+        </div>
       </div>
-    </Frame>
-  );
-}
 
-function Stat({ label, n, emphasis }: { label: string; n: number; emphasis: boolean }) {
-  return (
-    <div>
-      <div
+      <p
         style={{
+          margin: '32px 0 0',
+          flexShrink: 0,
           fontFamily: 'var(--font-sans)',
-          fontSize: 64,
-          fontWeight: 800,
-          lineHeight: 1,
-          letterSpacing: '-0.03em',
-          color: emphasis ? C.brightBlue : C.white,
-        }}
-      >
-        {n}
-      </div>
-      <div
-        style={{
-          marginTop: 8,
-          fontFamily: 'var(--font-sans)',
-          fontSize: 26,
+          fontSize: 25,
           fontWeight: 500,
-          color: 'rgba(244,245,255,0.62)',
+          lineHeight: 1.35,
+          color: 'rgba(244,245,255,0.55)',
         }}
       >
-        {label}
-      </div>
-    </div>
+        {TRACK_NOTE}
+      </p>
+    </Frame>
   );
 }

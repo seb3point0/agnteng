@@ -81,19 +81,34 @@ export const STATS = {
   ],
 };
 
-// Three columns, each with exactly one line under it. Leaving Company & role
-// bare was defensible on its own terms and wrong on the slide: a row of three
-// where one has no second line reads as a field somebody forgot to fill in,
-// not as a field that needs no explanation.
-export const TRACK = {
-  label: 'What we track',
-  items: [
-    { title: 'Company & role', body: 'Where they work and what they do there' },
-    { title: 'Socials', body: 'GitHub, LinkedIn, X' },
-    { title: 'Intent', body: 'Hiring, job seeking, raising, co-founder' },
-  ],
-  note: 'We enrich every signup from public profiles, so sponsors know who is worth meeting before the doors open.',
+// Two lists, not three title-and-subtitle pairs. The hole under "Company &
+// role" was never really about that cell: a row of headings-with-explanations
+// only works when every heading needs explaining, and "Company" does not.
+// Inventing a subtitle for it ("where they work and what they do there") only
+// moved the problem, because now the slide was explaining a word nobody needed
+// explained.
+//
+// As two plain lists the structure is honest about what these are. Intent leads
+// because it is the part a sponsor cannot get anywhere else: every other event
+// can tell you someone's job title, and none of them can tell you that person
+// came looking for a co-founder.
+export const INTENT = {
+  label: 'Intent they tell us',
+  items: ['Hiring', 'Job seeking', 'Raising', 'Starting a company', 'Looking for a co-founder'],
 };
+
+export const COLLECT = {
+  label: 'What we collect',
+  items: [
+    { name: 'Company' },
+    { name: 'Role' },
+    { name: 'City' },
+    { name: 'Socials', detail: 'GitHub, LinkedIn, X' },
+  ],
+};
+
+export const TRACK_NOTE =
+  'We enrich every signup from public profiles, so sponsors know who is worth meeting before the doors open.';
 
 // ── Slide 04: event format + talk rules ────────────────────────────────────
 export const FORMAT = {

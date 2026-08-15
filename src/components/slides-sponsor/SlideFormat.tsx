@@ -22,11 +22,14 @@ import { FORMAT, RULES, TALKS, type Talk, talkThumb, talkUrl } from './content';
 // ─────────────────────────────────────────────────────────────────────────
 
 const COL_GAP = 64;
-// The rule numbers sit above their text rather than beside it. Inline, the
-// number column and its gap cost 80px of a column that also has to hold
-// "Technical, no pitches" on one line, and that 80px is what the talk cards
-// needed: at 332 wide, "What The Hell Is An Agent?" wrapped, so one card had a
-// two-line title and the other two did not.
+// The rules are set at the same size as the talk titles beside them, which is
+// what lets the number sit back on the left and still leave "Technical, no
+// pitches" on one line inside 430px. Stacking the number above its rule did fit
+// but turned three short lines into six, and a numbered list that tall reads as
+// six rules rather than three.
+//
+// 430 is also what the talk cards need: at 332 wide "What The Hell Is An
+// Agent?" wrapped, so one card had a two-line title and the other two did not.
 const RULES_W = 430;
 const TALK_GAP = 26;
 const TALK_W = (1920 - PAD * 2 - RULES_W - COL_GAP - TALK_GAP * (TALKS.length - 1)) / TALKS.length;
@@ -48,30 +51,31 @@ export function Content({ active }: SlideProps) {
         <div style={{ width: RULES_W, flex: 'none' }}>
           <div style={LABEL}>Talk rules</div>
           {RULES.map((r) => (
-            <div key={r.n} style={{ marginTop: 34 }}>
-              <div
+            <div key={r.n} style={{ display: 'flex', alignItems: 'baseline', gap: 20, marginTop: 30 }}>
+              <span
                 style={{
                   fontFamily: 'var(--font-mono)',
-                  fontSize: 24,
+                  fontSize: 22,
                   fontWeight: 600,
                   color: C.periwinkle,
+                  width: 40,
+                  flex: 'none',
                 }}
               >
                 {r.n}
-              </div>
-              <div
+              </span>
+              <span
                 style={{
-                  marginTop: 8,
                   fontFamily: 'var(--font-sans)',
-                  fontSize: 38,
+                  fontSize: 26,
                   fontWeight: 700,
-                  lineHeight: 1.16,
+                  lineHeight: 1.2,
                   letterSpacing: '-0.02em',
                   color: C.white,
                 }}
               >
                 {r.title}
-              </div>
+              </span>
             </div>
           ))}
         </div>
