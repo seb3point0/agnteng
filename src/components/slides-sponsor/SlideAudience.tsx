@@ -123,8 +123,17 @@ export function Content() {
       <div style={{ display: 'flex', gap: COL_GAP, flexShrink: 0, marginTop: 'auto' }}>
         <div style={{ flex: 3, minWidth: 0 }}>
           <div style={MONO_LABEL}>{STATS.label}</div>
-          <div style={{ display: 'flex', gap: 56, marginTop: 18 }}>
-            {STATS.items.map((it, i) => (
+          {/* Stacked, not side by side. The two columns beside this one are
+              vertical lists, so a horizontal pair here was the only thing on
+              the row reading left-to-right, and it made the stats block half
+              the height of its neighbours. Stacked, all three columns run down
+              the slide and finish at roughly the same depth.
+
+              Both numbers are white. Picking out the attendance in blue made it
+              the answer and the registrations the setup, which is a judgement
+              the slide does not need to make for the reader. */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 24, marginTop: 18 }}>
+            {STATS.items.map((it) => (
               <div key={it.label}>
                 <div
                   style={{
@@ -133,7 +142,7 @@ export function Content() {
                     fontWeight: 800,
                     lineHeight: 1,
                     letterSpacing: '-0.03em',
-                    color: i === STATS.items.length - 1 ? C.brightBlue : C.white,
+                    color: C.white,
                   }}
                 >
                   {it.n}
@@ -187,9 +196,13 @@ export function Content() {
         </div>
       </div>
 
+      {/* A second auto margin. With only the band claiming one, every spare
+          pixel piled up above it and the note sat tight against the columns;
+          split between the two, the footnote reads as a footnote. */}
       <p
         style={{
-          margin: '32px 0 0',
+          marginTop: 'auto',
+          marginBottom: 0,
           flexShrink: 0,
           fontFamily: 'var(--font-sans)',
           fontSize: 25,
