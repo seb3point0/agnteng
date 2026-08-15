@@ -27,13 +27,15 @@ export const TITLE = {
 export const COMMUNITY = {
   headline: 'The room for agentic engineering',
   // The Substack's own description of itself, verbatim, plus one factual line.
-  // The previous version borrowed the website's "turning agents into an unfair
-  // advantage", which is hero copy written to sell a signup; in a sponsor deck
-  // it is the one sentence that sounds like marketing rather than like the
-  // people who run this. "Comparing what actually works in production" was
-  // invented outright and described no event that has happened.
+  // The website's "turning agents into an unfair advantage" is hero copy
+  // written to sell a signup; in a sponsor deck it was the one line that
+  // sounded like marketing rather than like the people who run this.
+  //
+  // Every subhead in this deck is a real sentence with a real verb. The
+  // fragment style ("Monthly, in person, since May 2026") is the house voice of
+  // decks that were written by a machine, and it costs nothing to avoid.
   subhead:
-    'For people building software, infrastructure and companies with agentic workflows. Monthly, in person, since May 2026.',
+    'Agentic Engineering is for people building software, infrastructure and companies with agentic workflows. We have met every month since May 2026.',
 };
 
 export interface PastEvent {
@@ -69,33 +71,37 @@ export const ROLES = [
   { label: 'Investors & others', pct: 20 },
 ] as const;
 
-export const ROLE_TOTAL = '550 registrants across our first three events';
+export const ROLE_TOTAL = '550 people have registered across our first three events.';
 
-export const FUNNEL = [
-  { label: 'Registrations', avg: 180 },
-  { label: 'Attendees', avg: 70 },
-] as const;
+export const STATS = {
+  label: 'Average event',
+  items: [
+    { label: 'Registrations', n: 180 },
+    { label: 'Attendees', n: 70 },
+  ],
+};
 
-// What a sponsor gets out of the list. Company and role are one line because
-// they answer one question; socials cover themselves; only intent needs saying
-// out loud, because it is the field that turns a list into introductions.
+// Three columns, each with exactly one line under it. Leaving Company & role
+// bare was defensible on its own terms and wrong on the slide: a row of three
+// where one has no second line reads as a field somebody forgot to fill in,
+// not as a field that needs no explanation.
 export const TRACK = {
   label: 'What we track',
   items: [
-    { title: 'Company & role' },
+    { title: 'Company & role', body: 'Where they work and what they do there' },
     { title: 'Socials', body: 'GitHub, LinkedIn, X' },
     { title: 'Intent', body: 'Hiring, job seeking, raising, co-founder' },
   ],
-  note: 'Every signup is enriched from public profiles, so sponsors know which participants are worth meeting before the event.',
+  note: 'We enrich every signup from public profiles, so sponsors know who is worth meeting before the doors open.',
 };
 
 // ── Slide 04: event format + talk rules ────────────────────────────────────
 export const FORMAT = {
   headline: 'Event format',
-  // "Lightning talks" is the recaps' own word for these. "Three 10-minute
-  // talks, and networking" also had a comma splicing two nouns, which reads as
-  // a list that lost its last item.
-  subhead: 'Three 10-minute lightning talks, then drinks and networking',
+  // "Lightning talks" is the recaps' own word for these. The line also needed a
+  // verb: "Three 10-minute lightning talks, then drinks and networking" is a
+  // caption, not a sentence.
+  subhead: 'Every event runs three 10-minute lightning talks, then drinks and networking.',
 };
 
 // Laid out side by side, so each has to hold one line in a 517px column.
@@ -221,7 +227,7 @@ export const TIERS: Tier[] = [
 // doing badly: scarcity stated as a policy reads as principle, stated as a
 // badge next to a price it reads as a sales tactic.
 export const FOOTNOTES = [
-  'We keep sponsorships small and well-matched. A few partners who actually want to be there.',
+  'We keep sponsorships small and well-matched, with partners who see value in being part of this community.',
   'Sponsorship never buys stage time. Talks are selected on merit.',
 ];
 
@@ -238,6 +244,6 @@ export const FOOTNOTES = [
 export const CLOSE = {
   headline: 'Partner with us',
   subhead:
-    'Back the room where agents get built. We keep sponsorships small and well-matched, a few partners who actually want to be there.',
+    "Become an early backer of Agentic Engineering and help us grow a high-signal community in Lisbon, one of Europe's fastest-growing AI and tech hubs.",
   email: 'partners@agnteng.com',
 };
