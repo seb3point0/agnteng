@@ -15,10 +15,10 @@ import { FUNNEL, ROLE_TOTAL, ROLES, TRACK } from './content';
 // bar encodes "what is this room made of", which is. It also makes the three
 // numbers visibly sum to everything, so nothing looks omitted.
 //
-// The bottom half is two columns split by a rule: the numbers on the left, the
-// data on the right. The per-event label sits directly above its own figures
-// rather than off to the side, where it was far enough from them to read as a
-// heading for the whole row.
+// The bottom half is two columns, numbers on the left and data on the right,
+// separated by space rather than a rule. The per-event label sits directly
+// above its own figures rather than off to the side, where it was far enough
+// from them to read as a heading for the whole row.
 // ─────────────────────────────────────────────────────────────────────────
 
 const TRACK_W = 1920 - PAD * 2;
@@ -99,14 +99,10 @@ export function Content() {
         ))}
       </div>
 
-      <div
-        style={{
-          display: 'flex',
-          marginTop: 'auto',
-          paddingTop: 40,
-          borderTop: '1px solid rgba(244,245,255,0.14)',
-        }}
-      >
+      {/* No rules anywhere on this slide. A hairline on a field that is itself
+          made of dots reads as another row of dots, and the whitespace was
+          already doing the separating. */}
+      <div style={{ display: 'flex', marginTop: 'auto' }}>
         <div style={{ width: STATS_W, flex: 'none' }}>
           <div style={MONO_LABEL}>Per event, on average</div>
           <div style={{ display: 'flex', gap: 72, marginTop: 22 }}>
@@ -116,7 +112,7 @@ export function Content() {
           </div>
         </div>
 
-        <div style={{ flex: 1, paddingLeft: 72, borderLeft: '1px solid rgba(244,245,255,0.14)' }}>
+        <div style={{ flex: 1, paddingLeft: 72 }}>
           <div style={MONO_LABEL}>{TRACK.label}</div>
           <div style={{ display: 'flex', gap: 56, marginTop: 22 }}>
             {TRACK.items.map((it) => (

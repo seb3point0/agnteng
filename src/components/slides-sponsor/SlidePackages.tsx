@@ -149,8 +149,7 @@ function Panel({ tier }: { tier: Tier }) {
       <div
         style={{
           marginTop: 'auto',
-          paddingTop: 38,
-          borderTop: '1px solid rgba(244,245,255,0.14)',
+          paddingTop: 52,
           display: 'flex',
           gap: 32,
         }}

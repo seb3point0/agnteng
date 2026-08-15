@@ -103,6 +103,25 @@ export const RULES = [
   { n: '03', title: 'Technical, no pitches' },
 ];
 
+// Talks from past events, sitting beside the rules as the proof of them. The
+// thumbnails are downloaded rather than hotlinked from img.youtube.com: a deck
+// is opened in venues with hostile wifi, and a rule about talks illustrated by
+// three broken images is worse than no illustration.
+export interface Talk {
+  id: string;
+  title: string;
+  speaker: string;
+}
+
+export const TALKS: Talk[] = [
+  { id: 'KSmPCenbWJk', title: 'What The Hell Is An Agent?', speaker: 'Misha Kolesnik' },
+  { id: 'KRzbyKm1thI', title: 'Me, My Slop, and I', speaker: 'Alex Lajarre' },
+  { id: 'uZo2NWtdfsc', title: 'Harness the Harness', speaker: 'Juan Cruz Fortunatti' },
+];
+
+export const talkThumb = (id: string) => `/assets/talks/${id}.jpg`;
+export const talkUrl = (id: string) => `https://www.youtube.com/watch?v=${id}`;
+
 // ── Slide 05: packages ─────────────────────────────────────────────────────
 export interface Benefit {
   text: string;
