@@ -1,12 +1,14 @@
 // ─────────────────────────────────────────────────────────────────────────
-// Sponsorship deck — all copy and figures, in one place.
+// Sponsorship deck. All copy and figures, in one place.
 //
 // Stage geometry, the palette and the slide primitives are shared with the
 // meetup deck (../slides/deck.ts, ../slides/parts.tsx); only the content and
-// the running order differ. Every number below comes from the registration
-// data for the three events run so far — nothing here is illustrative, because
-// a sponsor deck that rounds its own numbers up is the one thing that makes
-// the rest of it unbelievable.
+// the running order differ.
+//
+// No em dashes in anything that reaches the screen. They read as machine
+// writing to the people this deck is going to, and a sponsor deck cannot
+// afford to look generated. Bullets are squares, not dashes, for the same
+// reason. Comments are exempt; nobody reads those over your shoulder.
 // ─────────────────────────────────────────────────────────────────────────
 
 // ── Slide 01: title ────────────────────────────────────────────────────────
@@ -25,7 +27,7 @@ export const TITLE = {
 export const COMMUNITY = {
   headline: 'The room for agentic engineering',
   subhead:
-    'A community of engineers and founders turning agents into an unfair advantage — meeting monthly, in person, to compare what actually works in production.',
+    'A community of engineers and founders turning agents into an unfair advantage. Monthly, in person, comparing what actually works in production.',
 };
 
 export interface PastEvent {
@@ -34,80 +36,70 @@ export interface PastEvent {
   photo: string;
 }
 
-// Dates are the registration system's, which is also where the funnel numbers
-// below come from. The meetup deck says 29 May and 17 Jun for the first two;
-// those are a day or two out and this is the version to trust.
+// Dates are the registration system's. The meetup deck says 29 May and 17 Jun
+// for the first two; those are a day or two out and this is the version to
+// trust.
 export const EVENTS: PastEvent[] = [
   { city: 'Lisbon', date: '27 May 2026', photo: '/assets/photos/events/lisbon-may2026.jpg' },
   { city: 'Berlin', date: '16 Jun 2026', photo: '/assets/photos/events/berlin-jun2026.jpg' },
   { city: 'Lisbon', date: '29 Jul 2026', photo: '/assets/photos/events/lisbon-jul2026.webp' },
 ];
 
-// ── Slide 03: who is in the room ───────────────────────────────────────────
-// Shares of one whole, so percentages rather than counts — a sponsor is buying
-// the mix, and 228 means nothing without the denominator beside it.
+// ── Slide 03: who is in the room, and what we track ────────────────────────
+// Three segments, not four. `Other` as its own band invited the question of
+// what was in it, which is not a question worth spending a slide on; folded in
+// with investors it is one group a sponsor can price.
 //
-// Engineers folds in researchers and DevRel (135 + 36 + 14 = 185): all three
-// are the same person to a sponsor, and splitting them made the second-largest
-// group look like the fourth. `Other` is the remaining five roles — BD,
-// marketing, product, students, press — and is a residual, not a segment.
+// Engineers includes researchers and DevRel. All three are the same person to
+// a sponsor, and splitting them made the second-largest group look like the
+// fourth.
 //
-// Percentages are of 519 approved registrants and are rounded to whole numbers
-// that still sum to 100. Change any count and check that they still do.
+// Percentages are the observed mix across the three events (228 founders, 185
+// engineers, 106 everyone else, of 519 approved) and are rounded to whole
+// numbers that still sum to 100. Change a count and check that they still do.
 export const ROLES = [
   { label: 'Founders', pct: 44 },
   { label: 'Engineers', pct: 36 },
-  { label: 'Other', pct: 15 },
-  { label: 'Investors', pct: 5 },
+  { label: 'Investors & others', pct: 20 },
 ] as const;
 
-export const ROLE_TOTAL = 519;
+export const ROLE_TOTAL = '550 registrants across three events';
 
-// Per-event averages across Lisbon · Berlin · Lisbon. Registered 223/214/190,
-// attended 43/70/75 — a real meetup show-rate, stated plainly rather than
-// quoting registrations as if they were a door count.
 export const FUNNEL = [
-  { label: 'Register', avg: 210 },
-  { label: 'Attend', avg: 63 },
+  { label: 'Registrations', avg: 180 },
+  { label: 'Attendees', avg: 70 },
 ] as const;
 
-// ── Slide 04: what we know about them ──────────────────────────────────────
-// Two columns: what they do on the left, where to find them on the right. Only
-// Intent carries a description — the other five are their own explanation, and
-// a line of body text under "GitHub" is noise that makes the slide look busier
-// than it is.
-export const CAPTURE = {
-  headline: 'What we know about them',
-  subhead: 'Every registration, enriched from public profiles',
-  columns: [
-    [
-      { n: '01', title: 'Company' },
-      { n: '02', title: 'Role' },
-      { n: '03', title: 'Intent', body: 'Hiring · job-seeking · raising · co-founder' },
-    ],
-    [
-      { n: '04', title: 'GitHub' },
-      { n: '05', title: 'LinkedIn' },
-      { n: '06', title: 'X' },
-    ],
+// What a sponsor gets out of the list. Company and role are one line because
+// they answer one question; socials cover themselves; only intent needs saying
+// out loud, because it is the field that turns a list into introductions.
+export const TRACK = {
+  label: 'What we track',
+  items: [
+    { title: 'Company & role' },
+    { title: 'Socials', body: 'GitHub, LinkedIn, X' },
+    { title: 'Intent', body: 'Hiring, job seeking, raising, co-founder' },
   ],
+  note: 'Every signup is enriched from public profiles, so sponsors know which people are worth meeting before the doors open.',
 };
 
-// ── Slide 05: event format + talk rules ────────────────────────────────────
+// ── Slide 04: event format + talk rules ────────────────────────────────────
 export const FORMAT = {
   headline: 'Event format',
-  subhead: 'Three 10-minute technical talks, then drinks and time to actually talk',
+  subhead: 'Three 10-minute talks, and networking',
 };
 
-// All three bodies are deliberately the same length (37 chars) so they set as
-// one even line each and the block reads as a set, not a paragraph.
+// Three words each, laid out side by side. The old rules were written for
+// speakers and read as house style ("run long and we'll kindly cut you off"),
+// which is charming on a meetup slide and flippant in front of a sponsor.
+// These say the same three things as standards.
 export const RULES = [
-  { n: '01', title: 'Under 10 min', body: "Run long and we'll kindly cut you off" },
-  { n: '02', title: 'Make it useful', body: 'People leave having learned something' },
-  { n: '03', title: 'No pitches', body: 'Save the fundraise for the networking' },
+  { n: '01', title: 'Under 10 minutes' },
+  { n: '02', title: 'Educational & informative' },
+  { n: '03', title: 'Technical, no pitches' },
 ];
 
-// ── Slide 06: packages ─────────────────────────────────────────────────────
+// ── Slide 05: packages ─────────────────────────────────────────────────────
 export interface Tier {
   name: string;
   benefits: string[];
@@ -151,7 +143,7 @@ export const TIERS: Tier[] = [
 // slide read as a disclaimer before it read as a price list.
 export const NO_STAGE_TIME = 'Sponsorship never buys stage time. Talks are selected on merit.';
 
-// ── Slide 07: where to find us ─────────────────────────────────────────────
+// ── Slide 06: where to find us ─────────────────────────────────────────────
 export const LINKS = [
   { name: 'Telegram', url: 't.me/agntacc', qr: '/assets/qr/telegram.svg' },
   { name: 'Substack', url: 'agnteng.substack.com', qr: '/assets/qr/substack.svg' },

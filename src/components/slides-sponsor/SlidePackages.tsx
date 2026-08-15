@@ -10,6 +10,9 @@ import { NO_STAGE_TIME, TIERS, type Tier } from './content';
 // six-month column, and the subhead. What is left is two names, two lists and
 // four numbers, with space around them.
 //
+// Bullets are squares, not em dashes: the deck avoids the dash everywhere it
+// reaches the screen, and the square is the mark the site already uses.
+//
 // The two tiers share three benefits and Partner adds two more, listed in the
 // same order on both panels. A reader comparing them scans down one column and
 // stops where they diverge, instead of re-reading two differently-ordered
@@ -109,7 +112,15 @@ function Panel({ tier }: { tier: Tier }) {
               color: 'rgba(244,245,255,0.82)',
             }}
           >
-            <span style={{ color: C.brightBlue, flex: 'none' }}>—</span>
+            <span
+              style={{
+                flex: 'none',
+                width: 12,
+                height: 12,
+                marginTop: 12,
+                background: C.brightBlue,
+              }}
+            />
             <span>{b}</span>
           </li>
         ))}
