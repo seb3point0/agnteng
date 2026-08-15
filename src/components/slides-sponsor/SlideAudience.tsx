@@ -78,7 +78,7 @@ export function Content() {
           width: TRACK_W,
           height: BAR_H,
           flexShrink: 0,
-          marginTop: 32,
+          marginTop: 56,
           borderRadius: 10,
           overflow: 'hidden',
         }}
@@ -90,7 +90,7 @@ export function Content() {
 
       {/* Each label sits on the left edge of the band it names, so the bar is
           its own legend. */}
-      <div style={{ display: 'flex', width: TRACK_W, flexShrink: 0, marginTop: 20 }}>
+      <div style={{ display: 'flex', width: TRACK_W, flexShrink: 0, marginTop: 24 }}>
         {ROLES.map((r) => (
           <div key={r.label} style={{ width: `${r.pct}%`, paddingRight: 24, minWidth: 0 }}>
             <div

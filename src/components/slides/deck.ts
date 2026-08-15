@@ -13,6 +13,14 @@ export const STAGE_H = 1080;
 /** Slide gutter. All content lives inside this margin. */
 export const PAD = 128;
 
+/** The top gutter is tighter than the other three. Optically centring a
+ *  headline inside an even margin sits it lower than it looks like it should,
+ *  because the cap height starts well below the top of its line box; every
+ *  slide read as though its title had slipped down the stage. Pulling the top
+ *  in also hands the 36px back to the content underneath, which is where the
+ *  deck was short. */
+export const PAD_TOP = 92;
+
 /** What SlideDeck hands every slide layer. */
 export interface SlideProps {
   active: boolean; // drives `paused` on any <Animation> the slide owns

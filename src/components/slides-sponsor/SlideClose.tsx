@@ -49,7 +49,10 @@ export function Content({ active }: SlideProps) {
           fontSize: 72,
           fontWeight: 600,
           letterSpacing: '-0.01em',
-          color: C.brightBlue,
+          // Periwinkle, the same tone the Engineers band carries on slide 03.
+          // In brand blue the address sat at almost the value of the field
+          // behind it and read as a link rather than as the point of the slide.
+          color: C.periwinkle,
         }}
       >
         {CLOSE.email}

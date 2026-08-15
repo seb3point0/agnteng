@@ -1,7 +1,7 @@
 import type { CSSProperties, ReactNode } from 'react';
 import Animation from '../Animation';
 import type { AnimName } from '../Animation';
-import { C, PAD } from './deck';
+import { C, PAD, PAD_TOP } from './deck';
 
 // ─────────────────────────────────────────────────────────────────────────
 // Shared slide primitives.
@@ -66,7 +66,7 @@ export function Frame({ children, style }: { children: ReactNode; style?: CSSPro
         inset: 0,
         display: 'flex',
         flexDirection: 'column',
-        padding: PAD,
+        padding: `${PAD_TOP}px ${PAD}px ${PAD}px`,
         color: C.white,
         ...style,
       }}

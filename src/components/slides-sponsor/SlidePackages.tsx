@@ -1,5 +1,5 @@
 import { C, PAD, type SlideProps } from '../slides/deck';
-import { Backdrop, Frame, Headline } from '../slides/parts';
+import { Backdrop, Frame, Headline, Subhead } from '../slides/parts';
 import { FOOTNOTES, TIERS, type Tier } from './content';
 
 // ─────────────────────────────────────────────────────────────────────────
@@ -31,6 +31,7 @@ import { FOOTNOTES, TIERS, type Tier } from './content';
 
 const GAP = 44;
 const PANEL_W = (1920 - PAD * 2 - GAP) / 2;
+const TRACK_W = 1920 - PAD * 2;
 
 export function Background({ active }: SlideProps) {
   return <Backdrop animation="drift" fade="radial" motion={20} density={0.38} opacity={0.42} paused={!active} />;
@@ -41,30 +42,22 @@ export function Content() {
     <Frame>
       <Headline>Packages</Headline>
 
-      <div style={{ marginTop: 'auto' }}>
-        <div style={{ display: 'flex', gap: GAP }}>
-          {TIERS.map((t) => (
-            <Panel key={t.name} tier={t} />
-          ))}
-        </div>
+      {/* These two lines were a footnote under the panels. As the description
+          they are read before the prices rather than found after them, which is
+          the right order: how we pick partners, and what sponsorship does not
+          buy, are the terms the numbers sit inside. */}
+      <div style={{ marginTop: 24 }}>
+        {FOOTNOTES.map((f) => (
+          <Subhead key={f} style={{ margin: '8px 0 0', fontSize: 30, lineHeight: 1.32, maxWidth: TRACK_W }}>
+            {f}
+          </Subhead>
+        ))}
+      </div>
 
-        <div style={{ marginTop: 26 }}>
-          {FOOTNOTES.map((f) => (
-            <p
-              key={f}
-              style={{
-                margin: '5px 0 0',
-                fontFamily: 'var(--font-sans)',
-                fontSize: 23,
-                lineHeight: 1.3,
-                fontWeight: 500,
-                color: 'rgba(244,245,255,0.55)',
-              }}
-            >
-              {f}
-            </p>
-          ))}
-        </div>
+      <div style={{ display: 'flex', gap: GAP, marginTop: 'auto' }}>
+        {TIERS.map((t) => (
+          <Panel key={t.name} tier={t} />
+        ))}
       </div>
     </Frame>
   );
@@ -83,7 +76,7 @@ function Panel({ tier }: { tier: Tier }) {
         // than Partner's real height, so it did nothing except hide the fact
         // that the panel had grown past the space between the headline and the
         // footnote — and the panels overlapped "Packages".
-        padding: 34,
+        padding: 30,
         borderRadius: 24,
         // Both panels are opaque. A translucent blue tint on the featured one
         // let the field through and made the more expensive package look like
@@ -95,7 +88,7 @@ function Panel({ tier }: { tier: Tier }) {
       <div
         style={{
           fontFamily: 'var(--font-sans)',
-          fontSize: 50,
+          fontSize: 48,
           fontWeight: 800,
           letterSpacing: '-0.02em',
           color: C.white,
@@ -104,9 +97,9 @@ function Panel({ tier }: { tier: Tier }) {
         {tier.name}
       </div>
 
-      <ul style={{ margin: '16px 0 0', padding: 0, listStyle: 'none' }}>
+      <ul style={{ margin: '14px 0 0', padding: 0, listStyle: 'none' }}>
         {tier.benefits.map((b) => (
-          <li key={b.text} style={{ display: 'flex', gap: 20, marginTop: 12 }}>
+          <li key={b.text} style={{ display: 'flex', gap: 20, marginTop: 10 }}>
             <span
               style={{
                 flex: 'none',
@@ -156,7 +149,7 @@ function Panel({ tier }: { tier: Tier }) {
       <div
         style={{
           marginTop: 'auto',
-          paddingTop: 44,
+          paddingTop: 38,
           display: 'flex',
           gap: 32,
         }}
