@@ -1,4 +1,4 @@
-import type { OverlaySpec, Variant, Grad } from './overlay';
+import type { OverlaySpec, Variant, Grad, SpeakerFace } from './overlay';
 import type { Anchor } from './anchor';
 
 // A template = a fixed export frame + how to build the overlay design elements
@@ -14,14 +14,21 @@ export interface TemplateLogo {
   anchor: Anchor;
   mark: boolean; // mark-only vs full lockup
 }
+// Speaker/sponsor content — resolved to loaded <img> elements before build()
+// runs, same reason OverlayAssets holds elements rather than src strings: the
+// canvas draw is synchronous and can't wait on an image to decode.
+export interface TemplateExtra {
+  speakers: SpeakerFace[];
+  sponsors: (HTMLImageElement | null)[];
+}
 export interface Template {
   id: string;
-  group: 'banner' | 'avatar' | 'cover';
+  group: 'banner' | 'avatar' | 'cover' | 'speaker' | 'sponsor';
   name: string;
   frame: { w: number; h: number };
   chrome?: 'x' | 'linkedin' | 'substack' | 'luma' | 'telegram' | 'youtube';
   defaults: { logoAnchor: Anchor; logoScale: number; variant: Variant; mark: boolean };
-  build(text: TemplateText, logo: TemplateLogo): OverlaySpec;
+  build(text: TemplateText, logo: TemplateLogo, extra: TemplateExtra): OverlaySpec;
 }
 
 const banner = (
@@ -104,6 +111,42 @@ export const TEMPLATES: Template[] = [
     build: (t, l) => ({
       vignette: true,
       coverGroup: { scale: l.scale, variant: l.variant, city: t.city, date: t.date },
+    }),
+  },
+
+  // ── Speaker announcement (portrait, one speaker) ──
+  {
+    id: 'speaker-card',
+    group: 'speaker',
+    name: 'Speaker card',
+    frame: { w: 1080, h: 1350 },
+    defaults: { logoAnchor: 'center', logoScale: 0.3, variant: 'white', mark: true },
+    build: (_t, l, e) => ({
+      speakerCard: { speaker: e.speakers[0] ?? { name: '', title: '', photo: null }, variant: l.variant },
+    }),
+  },
+
+  // ── Speaker trio (16:9, three columns + optional sponsor strip) ──
+  {
+    id: 'speaker-trio',
+    group: 'speaker',
+    name: 'Speaker trio',
+    frame: { w: 1920, h: 1080 },
+    defaults: { logoAnchor: 'center', logoScale: 0.3, variant: 'white', mark: true },
+    build: (t, l, e) => ({
+      speakerTrio: { speakers: e.speakers, sponsors: e.sponsors, variant: l.variant, date: t.date },
+    }),
+  },
+
+  // ── "In partnership with" banner for the Luma page (LinkedIn-cover size) ──
+  {
+    id: 'sponsor-banner',
+    group: 'sponsor',
+    name: 'Sponsor banner',
+    frame: { w: 1584, h: 297 }, // 396 * 0.75
+    defaults: { logoAnchor: 'center', logoScale: 0.3, variant: 'white', mark: true },
+    build: (_t, _l, e) => ({
+      sponsorBanner: { label: 'In partnership with', sponsors: e.sponsors },
     }),
   },
 ];

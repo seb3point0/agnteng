@@ -1,18 +1,28 @@
 import { useEffect, useRef, type ReactNode } from 'react';
 import { drawOverlay, type OverlayAssets } from './animation-builder/overlay';
-import { normalizeWH, type Template as TemplateDef, type TemplateLogo, type TemplateText } from './animation-builder/templates';
+import {
+  normalizeWH,
+  type Template as TemplateDef,
+  type TemplateExtra,
+  type TemplateLogo,
+  type TemplateText,
+} from './animation-builder/templates';
 
 // <Template> wraps <Animation>: the field flows underneath, and the template's
-// design elements (logo lockup, city pill, date) are composited on top via a
-// resolution-independent overlay canvas. Banners also render the real platform
-// UI around the frame (preview only — never part of the export).
+// design elements (logo lockup, city pill, date, speaker photos, sponsor
+// logos) are composited on top via a resolution-independent overlay canvas.
+// Banners also render the real platform UI around the frame (preview only —
+// never part of the export).
 //
 //   <Template template={tpl} text={...} logo={...} ...><Animation .../></Template>
+
+const NO_EXTRA: TemplateExtra = { speakers: [], sponsors: [] };
 
 interface Props {
   template: TemplateDef;
   text: TemplateText;
   logo: TemplateLogo;
+  extra?: TemplateExtra;
   assets: OverlayAssets;
   fontsReady: boolean;
   mockup: boolean;
@@ -22,7 +32,7 @@ interface Props {
 
 const AVATAR = '/assets/logo/ae-icon.svg';
 
-export default function Template({ template, text, logo, assets, fontsReady, mockup, guides, children }: Props) {
+export default function Template({ template, text, logo, extra = NO_EXTRA, assets, fontsReady, mockup, guides, children }: Props) {
   const disp = normalizeWH(template.frame.w, template.frame.h);
   const overlayRef = useRef<HTMLCanvasElement>(null);
 
@@ -40,9 +50,9 @@ export default function Template({ template, text, logo, assets, fontsReady, moc
     cv.width = bw;
     cv.height = bh;
     ctx.clearRect(0, 0, bw, bh);
-    drawOverlay(ctx, bw, bh, template.build(text, logo), assets, fontsReady, guides);
+    drawOverlay(ctx, bw, bh, template.build(text, logo, extra), assets, fontsReady, guides);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [template, text.city, text.date, logo.scale, logo.variant, logo.anchor, logo.mark, assets, fontsReady, guides, bw, bh]);
+  }, [template, text.city, text.date, logo.scale, logo.variant, logo.anchor, logo.mark, extra, assets, fontsReady, guides, bw, bh]);
 
   return (
     <>

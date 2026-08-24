@@ -9,11 +9,13 @@ import TopBar from './animation-builder/TopBar';
 import CodeDrawer from './animation-builder/CodeDrawer';
 import { exportJpg, exportVideo, exportGif } from './animation-builder/exporters';
 import Template from './Template';
-import { TEMPLATES, findTemplate, aspectToPx, type TemplateLogo } from './animation-builder/templates';
+import { TEMPLATES, findTemplate, aspectToPx, type TemplateExtra, type TemplateLogo } from './animation-builder/templates';
 import { drawOverlay, type Variant } from './animation-builder/overlay';
 import { type Anchor } from './animation-builder/anchor';
 import AlignPad from './animation-builder/AlignPad';
 import { useLogoAssets, useFontsReady } from './animation-builder/useLogoAssets';
+import { useImageList } from './animation-builder/useImageList';
+import { SpeakerRow, SponsorList, type SpeakerData } from './animation-builder/SpeakerFields';
 
 type Fade = 'none' | 'left' | 'right' | 'up' | 'down' | 'radial';
 type Shape = 'square' | 'dot' | 'halftone';
@@ -93,6 +95,12 @@ export default function WaveFieldBuilder() {
   const [templateId, setTemplateId] = useState<string | null>(null);
   const [text, setText] = useState({ city: 'Lisbon', date: 'Thu 24 Jun · 19:00' });
   const [logo, setLogo] = useState<TemplateLogo>({ scale: 0.3, variant: 'white', anchor: 'center', mark: false });
+  const [speakers, setSpeakers] = useState<SpeakerData[]>([
+    { name: '', title: '', photo: '' },
+    { name: '', title: '', photo: '' },
+    { name: '', title: '', photo: '' },
+  ]);
+  const [sponsors, setSponsors] = useState<string[]>(['', '']);
   const [mockup, setMockup] = useState(true);
   const [guides, setGuides] = useState(true);
   const [open, setOpen] = useState<Record<SectionId, boolean>>({
@@ -110,6 +118,12 @@ export default function WaveFieldBuilder() {
   const assets = useLogoAssets();
   const fontsReady = useFontsReady();
   const tpl = findTemplate(templateId);
+  const speakerPhotos = useImageList(speakers.map((s) => s.photo || null));
+  const sponsorLogos = useImageList(sponsors.map((s) => s || null));
+  const extra: TemplateExtra = {
+    speakers: speakers.map((s, i) => ({ name: s.name, title: s.title, photo: speakerPhotos[i] ?? null })),
+    sponsors: sponsorLogos,
+  };
   const set = <K extends keyof Params>(k: K, v: Params[K]) => setP((s) => ({ ...s, [k]: v }));
   const setLogoK = <K extends keyof TemplateLogo>(k: K, v: TemplateLogo[K]) => setLogo((l) => ({ ...l, [k]: v }));
   const apply = (patch: Partial<Params>) => setP((s) => ({ ...s, ...patch }));
@@ -146,7 +160,9 @@ export default function WaveFieldBuilder() {
     ? `<Animation\n${animProps}\n>\n  <Image src="${imgSrcOut}" contrast={${p.contrast}} edgeGlow={${p.edgeGlow}} tone={${p.tone}} position="${imgPos}" />\n</Animation>`
     : `<Animation\n${animProps}\n/>`;
   let code = animBlock;
-  if (tpl) {
+  if (tpl && (tpl.group === 'speaker' || tpl.group === 'sponsor')) {
+    code = `/* ${tpl.name} has no JSX embed — names, photos and logos live in this\n   session's form state, so export it as an image (JPG/GIF/MP4) instead. */`;
+  } else if (tpl) {
     const inner = animBlock.split('\n').map((l) => '  ' + l).join('\n');
     const openTag =
       tpl.group === 'banner'
@@ -192,7 +208,7 @@ export default function WaveFieldBuilder() {
       const out = tpl ? tpl.frame : { w: canvas.width, h: canvas.height };
       const overlay = tpl
         ? (ctx: CanvasRenderingContext2D, W: number, H: number) =>
-            drawOverlay(ctx, W, H, tpl.build(text, logo), assets, fontsReady, false)
+            drawOverlay(ctx, W, H, tpl.build(text, logo, extra), assets, fontsReady, false)
         : undefined;
       const target = { source: canvas, out, bg: p.bg, overlay };
       const name = tpl ? `agentic-${tpl.id}-${out.w}x${out.h}` : `agentic-${p.animation}${src ? '-image' : ''}`;
@@ -249,7 +265,7 @@ export default function WaveFieldBuilder() {
         <div className="relative min-h-0 flex-1">
           <CanvasStage aspect={p.aspect} frame={tpl?.frame} bg={p.bg} paused={paused} onTogglePlay={() => setPaused((v) => !v)}>
             {tpl ? (
-              <Template template={tpl} text={text} logo={logo} assets={assets} fontsReady={fontsReady} mockup={mockup} guides={guides}>
+              <Template template={tpl} text={text} logo={logo} extra={extra} assets={assets} fontsReady={fontsReady} mockup={mockup} guides={guides}>
                 {fieldEl}
               </Template>
             ) : (
@@ -323,18 +339,49 @@ export default function WaveFieldBuilder() {
                   </Row>
                 </>
               )}
-              {tpl.group !== 'cover' && (
+              {tpl.id === 'speaker-trio' && (
+                <Row label="Top right text">
+                  <input
+                    type="text"
+                    value={text.date}
+                    onChange={(e) => setText((s) => ({ ...s, date: e.target.value }))}
+                    className="w-full min-w-0 rounded-md border border-black/15 bg-white px-2.5 py-1.5 font-mono text-[11px] text-deep-navy focus:border-electric-blue focus:outline-none"
+                  />
+                </Row>
+              )}
+              {tpl.group === 'speaker' && (
+                <div className="space-y-2 pt-1">
+                  {(tpl.id === 'speaker-card' ? speakers.slice(0, 1) : speakers).map((sp, i) => (
+                    <SpeakerRow
+                      key={i}
+                      index={i}
+                      value={sp}
+                      onChange={(v) => setSpeakers((s) => s.map((x, j) => (j === i ? v : x)))}
+                    />
+                  ))}
+                  {tpl.id === 'speaker-trio' && <SponsorList sponsors={sponsors} onChange={setSponsors} />}
+                </div>
+              )}
+              {tpl.group === 'sponsor' && <SponsorList sponsors={sponsors} onChange={setSponsors} />}
+              {tpl.group !== 'cover' && tpl.group !== 'speaker' && tpl.group !== 'sponsor' && (
                 <>
                   <Row label="Logo placement"><AlignPad value={logo.anchor} onChange={(a) => setLogoK('anchor', a)} /></Row>
                   <Row label="Logo"><Seg options={LOGO_KIND} value={logo.mark ? 'mark' : 'lockup'} onChange={(v) => setLogoK('mark', v === 'mark')} /></Row>
                 </>
               )}
-              {(tpl.group === 'cover' || !logo.mark) && (
+              {tpl.group === 'cover' && (
                 <Row label="Logo size" value={logo.scale.toFixed(2)}>
-                  <Slider min={0.15} max={tpl.group === 'cover' ? 0.9 : 0.55} step={0.01} value={logo.scale} onChange={(v) => setLogoK('scale', v)} />
+                  <Slider min={0.15} max={0.9} step={0.01} value={logo.scale} onChange={(v) => setLogoK('scale', v)} />
                 </Row>
               )}
-              <Row label="Logo color"><Seg options={VARIANTS} value={logo.variant} onChange={(v) => setLogoK('variant', v)} /></Row>
+              {tpl.group !== 'cover' && tpl.group !== 'speaker' && tpl.group !== 'sponsor' && !logo.mark && (
+                <Row label="Logo size" value={logo.scale.toFixed(2)}>
+                  <Slider min={0.15} max={0.55} step={0.01} value={logo.scale} onChange={(v) => setLogoK('scale', v)} />
+                </Row>
+              )}
+              {tpl.group !== 'sponsor' && (
+                <Row label="Logo color"><Seg options={VARIANTS} value={logo.variant} onChange={(v) => setLogoK('variant', v)} /></Row>
+              )}
             </>
           )}
         </CollapsibleSection>
