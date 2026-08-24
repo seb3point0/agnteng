@@ -82,7 +82,7 @@ export function Headline({ children, style }: { children: ReactNode; style?: CSS
       style={{
         margin: 0,
         fontFamily: 'var(--font-sans)',
-        fontSize: 104,
+        fontSize: 88,
         fontWeight: 800,
         lineHeight: 1.02,
         letterSpacing: '-0.03em',
@@ -115,6 +115,30 @@ export function Subhead({ children, style }: { children: ReactNode; style?: CSSP
   );
 }
 
+/** Dashed placeholder box for a slide asset (logo, screenshot) not filled in yet. */
+export function Placeholder({ height, label }: { height: number; label: string }) {
+  return (
+    <div
+      style={{
+        height,
+        borderRadius: 20,
+        border: '2px dashed rgba(244,245,255,0.22)',
+        background: 'rgba(244,245,255,0.03)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        fontFamily: 'var(--font-mono)',
+        fontSize: 22,
+        letterSpacing: '0.08em',
+        textTransform: 'uppercase',
+        color: 'rgba(244,245,255,0.35)',
+      }}
+    >
+      {label}
+    </div>
+  );
+}
+
 /** `01  ORGANIZE   Help run the next one.` — the list row used on slides 04/05. */
 export function NumberedRow({
   n,
@@ -122,12 +146,14 @@ export function NumberedRow({
   body,
   titleWidth = 460,
   size = 46,
+  divider = true,
 }: {
   n: string;
   title: string;
   body: string;
   titleWidth?: number;
   size?: number;
+  divider?: boolean;
 }) {
   return (
     <div
@@ -136,7 +162,7 @@ export function NumberedRow({
         alignItems: 'baseline',
         gap: 40,
         padding: '30px 0',
-        borderTop: '1px solid rgba(244,245,255,0.14)',
+        borderTop: divider ? '1px solid rgba(244,245,255,0.14)' : 'none',
       }}
     >
       <span

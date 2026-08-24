@@ -17,9 +17,9 @@ export const PAD = 128;
  *  headline inside an even margin sits it lower than it looks like it should,
  *  because the cap height starts well below the top of its line box; every
  *  slide read as though its title had slipped down the stage. Pulling the top
- *  in also hands the 36px back to the content underneath, which is where the
+ *  in also hands the space back to the content underneath, which is where the
  *  deck was short. */
-export const PAD_TOP = 92;
+export const PAD_TOP = 72;
 
 /** What SlideDeck hands every slide layer. */
 export interface SlideProps {
@@ -48,31 +48,15 @@ export const C = {
   yellow: '#F9C835',
 } as const;
 
-// ── Tonight ────────────────────────────────────────────────────────────────
-export const TONIGHT = {
-  city: 'Lisbon',
-  date: 'Wed 29 July 2026 · The Nest',
-} as const;
-
-// ── Slide 02: the community ────────────────────────────────────────────────
-// Cities stay out of the subhead — the cards underneath already say Lisbon and
-// Berlin. Phrasing echoes the Substack's own positioning ("people building
-// software, infrastructure, and companies with agentic workflows").
-export const COMMUNITY = {
-  headline: 'The room for agentic engineering',
-  subhead: '500+ builders and founders shipping with agents',
-};
-
 export interface PastEvent {
   city: string;
   date: string;
   photo: string;
 }
 
-export const EVENTS: PastEvent[] = [
-  { city: 'Lisbon', date: '29 May 2026', photo: '/assets/photos/events/lisbon-may2026.jpg' },
-  { city: 'Berlin', date: '17 Jun 2026', photo: '/assets/photos/events/berlin-jun2026.jpg' },
-];
+// TONIGHT, COMMUNITY and EVENTS are per-meetup, not per-deck-engine — each
+// dated deck folder (e.g. slides-2026-08-26/) carries its own content.ts with
+// these three, same split as slides-sponsor/content.ts.
 
 // ── Slide 03: where to find us ─────────────────────────────────────────────
 // `url` is what gets printed; `href` is what a click follows. They differ only

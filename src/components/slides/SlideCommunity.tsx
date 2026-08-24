@@ -1,4 +1,5 @@
-import { C, COMMUNITY, EVENTS, type PastEvent, type SlideProps } from './deck';
+import { C, type PastEvent, type SlideProps } from './deck';
+import { COMMUNITY, EVENTS } from './content';
 import { Backdrop, Frame, Headline, Subhead } from './parts';
 
 // ─────────────────────────────────────────────────────────────────────────

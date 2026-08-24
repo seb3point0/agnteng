@@ -2,25 +2,12 @@ import { useEffect, useRef } from 'react';
 import Animation from '../Animation';
 import Image from '../Image';
 import { drawOverlay } from '../animation-builder/overlay';
-import { C, STAGE_H, STAGE_W, type SlideProps } from './deck';
+import { C, STAGE_H, STAGE_W, type SlideProps } from '../slides/deck';
 import { TONIGHT } from './content';
 
 // ─────────────────────────────────────────────────────────────────────────
-// 01 — Title. The Luma event cover extended to 16:9.
-//
-// The field runs full-viewport (background layer) so it bleeds to every edge
-// of the screen; the lockup + LISBON pill + date are drawn on a canvas locked
-// to the 16:9 stage, so the composition keeps its proportions on any display.
-//
-// That split is also why the vignette is CSS here rather than the overlay's
-// `vignette: true` — a canvas vignette would stop at the 16:9 edge and leave a
-// visible seam in the letterbox area. The stops below are a direct translation
-// of drawVignette() in overlay.ts (r = min(W,H), 0.18r → 0.72r), expressed
-// against `closest-side` (= min(W,H)/2), hence 36% → 144%.
-//
-// cell={4}, not 2: the Animation Builder normalizes its artboard to a 960px
-// long edge, so a cell of 2 there means 480 columns. At real screen widths, 4
-// lands in the same register at a quarter of the per-frame rect count.
+// 01 — Title. See ../slides/SlideTitle.tsx for the full composition notes;
+// this is the same slide with this meetup's own TONIGHT.
 // ─────────────────────────────────────────────────────────────────────────
 
 // 0.62 × 1.75 — the lockup lands at ~61% of the frame width.
