@@ -1,23 +1,21 @@
 ---
-import Base from '../layouts/Base.astro';
-import SiteHeader from '../components/SiteHeader.astro';
+import Base from '../../layouts/Base.astro';
+import SiteHeader from '../../components/SiteHeader.astro';
 
+// Newest to oldest.
 const links = [
-  { n: '01', label: 'Brand Guidelines', href: '/brand-guidelines' },
-  { n: '02', label: 'Animation Builder', href: '/playground' },
-  { n: '03', label: 'Website Mockups', href: '/website-mockups' },
-  { n: '04', label: 'Meetup Slides', href: '/slides' },
-  { n: '05', label: 'Sponsorship Deck', href: '/sponsorship' },
+  { n: '01', label: 'Lisbon - 2026-08-26', href: '/slides/lisbon-2026-08-26' },
+  { n: '02', label: 'Lisbon - 2026-07-29', href: '/slides/lisbon-2026-07-29' },
 ];
 ---
 
-<Base>
-  <SiteHeader title="Master Design System" back={false} />
+<Base title="Meetup Slides — Agentic Engineering">
+  <SiteHeader title="Meetup Slides" />
   <main class="mx-auto max-w-[1280px] px-12 py-20">
     <div class="flex items-center gap-2.5">
       <span class="block h-2.5 w-2.5 bg-bright-blue"></span>
       <span class="font-mono text-xs font-semibold uppercase tracking-[0.2em] text-periwinkle">
-        Agentic Engineering — Master Design System
+        Meetup Slides
       </span>
     </div>
 
