@@ -15,9 +15,12 @@ COPY . .
 RUN npm run build
 
 # ── serve the deck at the root ─────────────────────────────────────────
+# The Astro build now splits into dist/client (prerendered static output,
+# what this nginx-only image needs) and dist/server (the on-demand routes
+# used by the main deck image's Dockerfile) — see astro.config.mjs.
 FROM nginx:alpine
 COPY nginx.sponsors.conf /etc/nginx/conf.d/default.conf
-COPY --from=build /app/dist /usr/share/nginx/html
+COPY --from=build /app/dist/client /usr/share/nginx/html
 
 # Static files are world-readable whatever the build context looked like. Two
 # assets in this repo were mode 600 in a working tree, and `COPY` preserves

@@ -1,7 +1,12 @@
+import { useEffect, useState } from 'react';
 import { C, PAD, type Slide, type SlideProps } from '../slides/deck';
 import { Backdrop, Body, Frame, Header, Headline } from '../slides/parts';
 import { SPEAKERS, type Speaker } from './content';
 import type { AudienceData } from '../../lib/luma';
+
+// Re-polled after mount so the room's numbers stay current through the event
+// without anyone reloading the page — see the useEffect in Content below.
+const POLL_MS = 30_000;
 
 // ─────────────────────────────────────────────────────────────────────────
 // Who's in the room tonight. Four columns: the room's own numbers take the
@@ -100,7 +105,34 @@ function LiveDataPill() {
   );
 }
 
-function Content({ data }: { data: AudienceData }) {
+function Content({ data: initialData }: { data: AudienceData }) {
+  const [data, setData] = useState(initialData);
+
+  // Server-rendered `initialData` is already fresh (the deck page is
+  // on-demand, not prerendered — see lisbon-2026-08-26.astro), so this just
+  // keeps it fresh as more people check in while the deck stays open.
+  useEffect(() => {
+    let cancelled = false;
+
+    async function poll() {
+      try {
+        const res = await fetch('/api/audience.json', { cache: 'no-store' });
+        if (!res.ok) return;
+        const next: AudienceData = await res.json();
+        if (!cancelled) setData(next);
+      } catch {
+        // Transient network hiccup — keep showing the last good data and
+        // try again on the next tick.
+      }
+    }
+
+    const id = setInterval(poll, POLL_MS);
+    return () => {
+      cancelled = true;
+      clearInterval(id);
+    };
+  }, []);
+
   const intent = data.intent.filter((i) => i.label !== SPONSOR_INTENT_LABEL);
   const maxIntent = Math.max(1, ...intent.map((i) => i.count));
   const roomCount = data.usingCheckedInOnly ? data.checkedInCount : data.totalGuests;

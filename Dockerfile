@@ -1,4 +1,4 @@
-# ── build the static site ──────────────────────────────────────────────
+# ── build the site ──────────────────────────────────────────────────────
 FROM node:22-alpine AS build
 WORKDIR /app
 COPY package.json package-lock.json ./
@@ -6,16 +6,18 @@ RUN npm ci
 COPY . .
 RUN npm run build
 
-# ── serve the static output with nginx ─────────────────────────────────
-FROM nginx:alpine
-COPY nginx.conf /etc/nginx/conf.d/default.conf
-COPY --from=build /app/dist /usr/share/nginx/html
-
-# Static files are world-readable whatever the build context looked like. Two
-# assets in this repo were mode 600 in a working tree, and `COPY` preserves
-# that: nginx runs as `nginx`, could not read them, and served 403 for exactly
-# those two files while everything around them worked. Git records 100644 so a
-# clone-and-build on the node was fine, which is the worst version of this bug,
-# reproducible only on the machine that has the odd modes.
-RUN chmod -R a+rX /usr/share/nginx/html
+# ── run it ───────────────────────────────────────────────────────────────
+# Most pages are still prerendered at build time above, but the Luma-backed
+# audience endpoint (src/pages/api/audience.json.ts) and the live deck page
+# that polls it are on-demand, so this needs a real process, not nginx. The
+# node adapter's standalone server serves the prerendered static output
+# itself, so this one process is the whole app.
+FROM node:22-alpine
+WORKDIR /app
+COPY --from=build /app/dist ./dist
+ENV HOST=0.0.0.0
+# Same port nginx used to listen on, so Dokploy's existing port mapping for
+# this service doesn't need to change alongside the image.
+ENV PORT=80
 EXPOSE 80
+CMD ["node", "./dist/server/entry.mjs"]
