@@ -1,5 +1,5 @@
 import { ASKS, C, type Slide, type SlideProps } from '../slides/deck';
-import { Backdrop, Frame, Headline, NumberedRow } from '../slides/parts';
+import { Backdrop, Body, Frame, Header, Headline, NumberedRow } from '../slides/parts';
 import { LUMA_EVENT_URL } from './content';
 
 // ─────────────────────────────────────────────────────────────────────────
@@ -12,105 +12,115 @@ import { LUMA_EVENT_URL } from './content';
 // tier is one click away.
 // ─────────────────────────────────────────────────────────────────────────
 
-const TICKET_IMG_W = 460;
-const TICKET_IMG_H = Math.round((TICKET_IMG_W * 603) / 1140);
+const TICKET_IMG_W = 580;
+const TICKET_IMG_H = Math.round((TICKET_IMG_W * 603) / 930);
 
 function Content({ supporters, active }: { supporters: string[]; active: boolean }) {
   return (
     <Frame>
-      <Headline>Support the meetup</Headline>
+      <Header>
+        <Headline>Support the meetup</Headline>
+      </Header>
 
-      <div
-        style={{ display: 'flex', gap: 80, marginTop: 'auto', marginBottom: 'auto', alignItems: 'flex-start' }}
-      >
-        <div style={{ flex: 1 }}>
-          {ASKS.map((a) => (
-            <NumberedRow key={a.n} n={a.n} title={a.title} body={a.body} titleWidth={300} size={38} divider={false} />
-          ))}
-        </div>
-
-        <div style={{ width: 620, flex: 'none' }}>
-          <div
-            style={{
-              fontFamily: 'var(--font-mono)',
-              fontSize: 22,
-              fontWeight: 600,
-              letterSpacing: '0.14em',
-              textTransform: 'uppercase',
-              color: C.periwinkle,
-            }}
-          >
-            Thank you to tonight&rsquo;s supporters
+      <Body>
+        <div style={{ display: 'flex', gap: 80, alignItems: 'flex-start' }}>
+          <div style={{ flex: 1 }}>
+            {ASKS.map((a) => (
+              <NumberedRow
+                key={a.n}
+                n={a.n}
+                title={a.title}
+                body={a.body}
+                titleWidth={300}
+                size={34}
+                divider={false}
+              />
+            ))}
           </div>
 
-          {supporters.length > 0 ? (
+          <div style={{ width: 660, flex: 'none' }}>
             <div
               style={{
-                marginTop: 28,
-                columnCount: supporters.length > 6 ? 2 : 1,
-                columnGap: 40,
+                fontFamily: 'var(--font-mono)',
+                fontSize: 22,
+                fontWeight: 600,
+                letterSpacing: '0.14em',
+                textTransform: 'uppercase',
+                color: C.periwinkle,
               }}
             >
-              {supporters.map((name) => (
-                <div
-                  key={name}
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: 16,
-                    padding: '10px 0',
-                    breakInside: 'avoid',
-                  }}
-                >
-                  <span style={{ width: 8, height: 8, flex: 'none', background: C.brightBlue }} />
-                  <span style={{ fontFamily: 'var(--font-sans)', fontSize: 32, fontWeight: 600, color: C.white }}>
-                    {name}
-                  </span>
-                </div>
-              ))}
+              Thank you to tonight&rsquo;s supporters
             </div>
-          ) : (
-            <p
-              style={{
-                marginTop: 28,
-                fontFamily: 'var(--font-sans)',
-                fontSize: 28,
-                color: 'rgba(244,245,255,0.55)',
-              }}
-            >
-              No supporters yet this month — be the first.
-            </p>
-          )}
 
-          <a
-            href={LUMA_EVENT_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={(e) => e.stopPropagation()}
-            tabIndex={active ? 0 : -1}
-            style={{
-              display: 'block',
-              marginTop: 32,
-              width: TICKET_IMG_W,
-              pointerEvents: active ? 'auto' : 'none',
-              cursor: 'pointer',
-            }}
-          >
-            <img
-              src="/assets/luma/supporter-ticket.png"
-              alt="Get a Supporter ticket on Luma"
+            {supporters.length > 0 ? (
+              <div
+                style={{
+                  marginTop: 28,
+                  columnCount: supporters.length > 6 ? 2 : 1,
+                  columnGap: 40,
+                }}
+              >
+                {supporters.map((name) => (
+                  <div
+                    key={name}
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: 16,
+                      padding: '10px 0',
+                      breakInside: 'avoid',
+                    }}
+                  >
+                    <span style={{ width: 8, height: 8, flex: 'none', background: C.brightBlue }} />
+                    <span style={{ fontFamily: 'var(--font-sans)', fontSize: 32, fontWeight: 600, color: C.white }}>
+                      {name}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p
+                style={{
+                  marginTop: 28,
+                  fontFamily: 'var(--font-sans)',
+                  fontSize: 28,
+                  color: 'rgba(244,245,255,0.55)',
+                }}
+              >
+                No supporters yet this month — be the first.
+              </p>
+            )}
+
+            <a
+              href={LUMA_EVENT_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={(e) => e.stopPropagation()}
+              tabIndex={active ? 0 : -1}
               style={{
                 display: 'block',
-                width: '100%',
-                height: TICKET_IMG_H,
-                objectFit: 'cover',
-                borderRadius: 16,
-                border: '1px solid rgba(181,166,255,0.22)',
+                marginTop: 32,
+                width: TICKET_IMG_W,
+                pointerEvents: active ? 'auto' : 'none',
+                cursor: 'pointer',
               }}
-            />
-          </a>
+            >
+              <img
+                src="/assets/luma/supporter-ticket.png"
+                alt="Get a Supporter ticket on Luma"
+                style={{
+                  display: 'block',
+                  width: '100%',
+                  height: TICKET_IMG_H,
+                  objectFit: 'cover',
+                  borderRadius: 16,
+                  border: '1px solid rgba(181,166,255,0.22)',
+                }}
+              />
+            </a>
+          </div>
         </div>
-      </div>
+      </Body>
     </Frame>
   );
 }

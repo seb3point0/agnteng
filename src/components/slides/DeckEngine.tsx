@@ -29,11 +29,39 @@ import { STAGE_H, STAGE_W, type Slide, type SlideProps } from './deck';
 const NEXT_KEYS = new Set([' ', 'Enter', 'ArrowRight', 'ArrowDown', 'PageDown', 'Spacebar']);
 const PREV_KEYS = new Set(['ArrowLeft', 'ArrowUp', 'PageUp', 'Backspace']);
 
-export default function DeckEngine({ slides }: { slides: Slide[] }) {
+export default function DeckEngine({
+  slides,
+  loopIndices,
+  loopIntervalMs = 10000,
+}: {
+  slides: Slide[];
+  // Slide indices to auto-cycle through when the presenter hits "S" — e.g. the
+  // title plus each sponsor slide, so the deck can run unattended during a
+  // meet-and-greet without a human on the clicker. Omit (or pass []) to
+  // disable the feature for a deck that has no use for it.
+  loopIndices?: number[];
+  loopIntervalMs?: number;
+}) {
   const [i, setI] = useState(0);
   const [scale, setScale] = useState(1);
   const [started, setStarted] = useState(false);
+  const [loopMode, setLoopMode] = useState(false);
+  const loopPosRef = useRef(0);
   const rootRef = useRef<HTMLDivElement>(null);
+
+  const canLoop = !!loopIndices && loopIndices.length > 0;
+
+  // Auto-advance through loopIndices every loopIntervalMs while loopMode is on.
+  useEffect(() => {
+    if (!loopMode || !loopIndices || loopIndices.length === 0) return;
+    loopPosRef.current = 0;
+    setI(loopIndices[0]);
+    const id = setInterval(() => {
+      loopPosRef.current = (loopPosRef.current + 1) % loopIndices.length;
+      setI(loopIndices[loopPosRef.current]);
+    }, loopIntervalMs);
+    return () => clearInterval(id);
+  }, [loopMode, loopIndices, loopIntervalMs]);
 
   // Loaded once for the whole deck rather than per-slide, so the overlay logo
   // SVGs and Kode Mono metrics are ready before the title slide paints.
@@ -77,12 +105,19 @@ export default function DeckEngine({ slides }: { slides: Slide[] }) {
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.metaKey || e.ctrlKey || e.altKey) return;
+      if ((e.key === 's' || e.key === 'S') && canLoop) {
+        e.preventDefault();
+        setLoopMode((v) => !v);
+        enterFullscreen();
+        return;
+      }
       if (e.key === 'f' || e.key === 'F') {
         e.preventDefault();
         toggleFullscreen();
         setStarted(true);
         return;
       }
+      if (loopMode) return; // unattended presenter mode — S is the only key that does anything
       if (e.key === 'Home') {
         e.preventDefault();
         setI(0);
@@ -102,17 +137,19 @@ export default function DeckEngine({ slides }: { slides: Slide[] }) {
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [go, enterFullscreen, toggleFullscreen, slides.length]);
+  }, [go, enterFullscreen, toggleFullscreen, slides.length, canLoop, loopMode]);
 
-  // click anywhere advances; right-click goes back without a context menu
+  // click anywhere advances; right-click goes back without a context menu.
+  // Both are no-ops in loop mode, so an accidental tap at the event doesn't
+  // knock the deck out of its cycle.
   const onClick = () => {
     enterFullscreen();
-    go(1);
+    if (!loopMode) go(1);
   };
   const onContextMenu = (e: React.MouseEvent) => {
     e.preventDefault();
     enterFullscreen();
-    go(-1);
+    if (!loopMode) go(-1);
   };
 
   const props = (idx: number): SlideProps => ({ active: idx === i, assets, fontsReady, started });
@@ -165,7 +202,7 @@ export default function DeckEngine({ slides }: { slides: Slide[] }) {
         ))}
       </div>
 
-      <Progress i={i} n={slides.length} />
+      {!loopMode && <Progress i={i} n={slides.length} />}
     </div>
   );
 }

@@ -1,5 +1,5 @@
 import { C, LINKS, PAD, type SlideProps } from '../slides/deck';
-import { Backdrop, Frame, Headline } from '../slides/parts';
+import { Backdrop, Body, Frame, Header, Headline } from '../slides/parts';
 
 // ─────────────────────────────────────────────────────────────────────────
 // 06 — Where to find us. Same headline and channels as the standing meetup
@@ -24,13 +24,17 @@ export function Background({ active }: SlideProps) {
 export function Content({ active }: SlideProps) {
   return (
     <Frame>
-      <Headline>Where to find us</Headline>
+      <Header>
+        <Headline>Where to find us</Headline>
+      </Header>
 
-      <div style={{ display: 'flex', gap: GAP, marginTop: 'auto', marginBottom: 'auto' }}>
-        {LINKS.map((l) => (
-          <Channel key={l.name} {...l} active={active} />
-        ))}
-      </div>
+      <Body>
+        <div style={{ display: 'flex', gap: GAP }}>
+          {LINKS.map((l) => (
+            <Channel key={l.name} {...l} active={active} />
+          ))}
+        </div>
+      </Body>
     </Frame>
   );
 }

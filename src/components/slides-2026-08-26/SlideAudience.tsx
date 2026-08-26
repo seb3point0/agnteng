@@ -1,5 +1,5 @@
 import { C, PAD, type Slide, type SlideProps } from '../slides/deck';
-import { Backdrop, Frame, Headline } from '../slides/parts';
+import { Backdrop, Body, Frame, Header, Headline } from '../slides/parts';
 import { SPEAKERS, type Speaker } from './content';
 import type { AudienceData } from '../../lib/luma';
 
@@ -33,7 +33,7 @@ const LEFT_W = Math.round(((TRACK_W - COL_GAP) * 3) / 5);
 const RIGHT_W = TRACK_W - COL_GAP - LEFT_W;
 const BAR_H = 64;
 const SPONSOR_INTENT_LABEL = 'Interested in sponsoring the event';
-const LIVE_GREEN = '#34D399';
+const LIVE_GREEN = '#16D9A6'; // brand Mint
 
 // One scale, used for the role legend and the speaker names alike.
 const STAT_N = 52;
@@ -65,27 +65,29 @@ function LiveDataPill() {
         display: 'flex',
         alignItems: 'center',
         gap: 12,
-        padding: '14px 26px',
+        padding: '14px 28px',
         borderRadius: 999,
-        background: 'rgba(52,211,153,0.14)',
-        border: '1px solid rgba(52,211,153,0.4)',
+        background: 'rgba(22,217,166,0.18)',
+        border: '1.5px solid rgba(22,217,166,0.65)',
+        boxShadow: '0 0 28px rgba(22,217,166,0.3)',
       }}
     >
       <span
         style={{
-          width: 9,
-          height: 9,
+          width: 10,
+          height: 10,
           flex: 'none',
           borderRadius: '50%',
           background: LIVE_GREEN,
+          boxShadow: `0 0 12px ${LIVE_GREEN}`,
           animation: 'live-pulse 1.6s ease-in-out infinite',
         }}
       />
       <span
         style={{
           fontFamily: 'var(--font-mono)',
-          fontSize: 18,
-          fontWeight: 600,
+          fontSize: 19,
+          fontWeight: 700,
           lineHeight: 1,
           letterSpacing: '0.16em',
           textTransform: 'uppercase',
@@ -107,73 +109,68 @@ function Content({ data }: { data: AudienceData }) {
     <Frame>
       <style>{'@keyframes live-pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.35; } }'}</style>
 
-      <div style={{ display: 'flex', alignItems: 'center', gap: 28 }}>
-        <Headline>{roomCount} in the room tonight</Headline>
-        <LiveDataPill />
-      </div>
+      <Header>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 28 }}>
+          <Headline>{roomCount} in the room tonight</Headline>
+          <LiveDataPill />
+        </div>
+      </Header>
 
-      <div
-        style={{
-          display: 'flex',
-          gap: COL_GAP,
-          flexShrink: 0,
-          marginTop: 'auto',
-          marginBottom: 'auto',
-          alignItems: 'flex-start',
-        }}
-      >
-        <div style={{ width: LEFT_W, flex: 'none' }}>
-          {data.roles.length > 0 ? (
-            <>
-              <div style={{ display: 'flex', width: LEFT_W, height: BAR_H, borderRadius: 10, overflow: 'hidden' }}>
-                {data.roles.map((r) => (
-                  <div key={r.label} style={{ width: `${r.pct}%`, background: SEGMENT_COLOR[r.label] }} />
+      <Body>
+        <div style={{ display: 'flex', gap: COL_GAP, alignItems: 'flex-start' }}>
+          <div style={{ width: LEFT_W, flex: 'none' }}>
+            {data.roles.length > 0 ? (
+              <>
+                <div style={{ display: 'flex', width: LEFT_W, height: BAR_H, borderRadius: 10, overflow: 'hidden' }}>
+                  {data.roles.map((r) => (
+                    <div key={r.label} style={{ width: `${r.pct}%`, background: SEGMENT_COLOR[r.label] }} />
+                  ))}
+                </div>
+
+                <div style={{ display: 'flex', width: LEFT_W, marginTop: 30 }}>
+                  {data.roles.map((r) => (
+                    <div key={r.label} style={{ width: `${r.pct}%`, paddingRight: 20, minWidth: 0 }}>
+                      <Stat n={`${r.pct}%`} label={r.label} />
+                    </div>
+                  ))}
+                </div>
+              </>
+            ) : (
+              <p style={{ fontFamily: 'var(--font-sans)', fontSize: 26, color: 'rgba(244,245,255,0.55)' }}>
+                No one checked in yet — check back once doors open.
+              </p>
+            )}
+
+            {intent.length > 0 ? (
+              <div style={{ marginTop: 92, display: 'flex', flexDirection: 'column', gap: 40 }}>
+                {intent.map((it) => (
+                  <IntentBar key={it.label} label={it.label} count={it.count} max={maxIntent} />
                 ))}
               </div>
+            ) : (
+              <p
+                style={{
+                  marginTop: 92,
+                  fontFamily: 'var(--font-sans)',
+                  fontSize: 24,
+                  color: 'rgba(244,245,255,0.55)',
+                }}
+              >
+                Nobody has flagged anything yet.
+              </p>
+            )}
+          </div>
 
-              <div style={{ display: 'flex', width: LEFT_W, marginTop: 30 }}>
-                {data.roles.map((r) => (
-                  <div key={r.label} style={{ width: `${r.pct}%`, paddingRight: 20, minWidth: 0 }}>
-                    <Stat n={`${r.pct}%`} label={r.label} />
-                  </div>
-                ))}
-              </div>
-            </>
-          ) : (
-            <p style={{ fontFamily: 'var(--font-sans)', fontSize: 26, color: 'rgba(244,245,255,0.55)' }}>
-              No one checked in yet — check back once doors open.
-            </p>
-          )}
-
-          {intent.length > 0 ? (
-            <div style={{ marginTop: 92, display: 'flex', flexDirection: 'column', gap: 40 }}>
-              {intent.map((it) => (
-                <IntentBar key={it.label} label={it.label} count={it.count} max={maxIntent} />
+          <div style={{ width: RIGHT_W, flex: 'none' }}>
+            <div style={CAPTION}>Tonight&rsquo;s speakers</div>
+            <div style={{ marginTop: 28 }}>
+              {SPEAKERS.map((s, i) => (
+                <SpeakerRow key={i} speaker={s} />
               ))}
             </div>
-          ) : (
-            <p
-              style={{
-                marginTop: 92,
-                fontFamily: 'var(--font-sans)',
-                fontSize: 24,
-                color: 'rgba(244,245,255,0.55)',
-              }}
-            >
-              Nobody has flagged anything yet.
-            </p>
-          )}
-        </div>
-
-        <div style={{ width: RIGHT_W, flex: 'none' }}>
-          <div style={CAPTION}>Tonight&rsquo;s speakers</div>
-          <div style={{ marginTop: 28 }}>
-            {SPEAKERS.map((s, i) => (
-              <SpeakerRow key={i} speaker={s} />
-            ))}
           </div>
         </div>
-      </div>
+      </Body>
     </Frame>
   );
 }

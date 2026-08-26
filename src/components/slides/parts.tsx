@@ -1,4 +1,5 @@
 import type { CSSProperties, ReactNode } from 'react';
+import qrcode from 'qrcode-generator';
 import Animation from '../Animation';
 import type { AnimName } from '../Animation';
 import { C, PAD, PAD_TOP } from './deck';
@@ -76,6 +77,35 @@ export function Frame({ children, style }: { children: ReactNode; style?: CSSPro
   );
 }
 
+/** Gap between a slide's header and its content, put on Header itself (not
+ *  Frame) so it only shows up on slides that actually use Header/Body. */
+const HEADER_GUTTER = 56;
+
+/** A slide's title (+ optional description), sized to its own content — never
+ *  stretched or pushed around by what's below it. */
+export function Header({ children, style }: { children: ReactNode; style?: CSSProperties }) {
+  return <div style={{ flex: 'none', marginBottom: HEADER_GUTTER, ...style }}>{children}</div>;
+}
+
+/** Everything below the header. Takes whatever height is left in the Frame
+ *  and centers its content vertically inside that space by default. */
+export function Body({ children, style }: { children: ReactNode; style?: CSSProperties }) {
+  return (
+    <div
+      style={{
+        flex: 1,
+        minHeight: 0,
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        ...style,
+      }}
+    >
+      {children}
+    </div>
+  );
+}
+
 export function Headline({ children, style }: { children: ReactNode; style?: CSSProperties }) {
   return (
     <h1
@@ -136,6 +166,44 @@ export function Placeholder({ height, label }: { height: number; label: string }
     >
       {label}
     </div>
+  );
+}
+
+/** Scannable QR code linking to `value`. White quiet zone is drawn in, so it
+ *  stays scannable when dropped straight onto the navy backdrop. */
+export function QRCode({ value, size = 120, style }: { value: string; size?: number; style?: CSSProperties }) {
+  const qr = qrcode(0, 'M');
+  qr.addData(value);
+  qr.make();
+
+  const moduleCount = qr.getModuleCount();
+  const quietZone = 2; // modules of white margin — under this, phone cameras miss the finder patterns
+  const totalModules = moduleCount + quietZone * 2;
+  const cell = size / totalModules;
+
+  const modules: ReactNode[] = [];
+  for (let row = 0; row < moduleCount; row++) {
+    for (let col = 0; col < moduleCount; col++) {
+      if (qr.isDark(row, col)) {
+        modules.push(
+          <rect
+            key={`${row}-${col}`}
+            x={(col + quietZone) * cell}
+            y={(row + quietZone) * cell}
+            width={cell}
+            height={cell}
+            fill={C.navy}
+          />,
+        );
+      }
+    }
+  }
+
+  return (
+    <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} style={{ display: 'block', ...style }}>
+      <rect width={size} height={size} fill={C.white} rx={10} />
+      {modules}
+    </svg>
   );
 }
 

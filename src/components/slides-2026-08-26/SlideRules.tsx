@@ -1,5 +1,5 @@
 import { RULES, type SlideProps } from '../slides/deck';
-import { Backdrop, Frame, Headline, NumberedRow } from '../slides/parts';
+import { Backdrop, Body, Frame, Header, Headline, NumberedRow } from '../slides/parts';
 
 // ─────────────────────────────────────────────────────────────────────────
 // Talk rules — same content as ../slides/SlideRules.tsx, forked so this deck
@@ -17,9 +17,11 @@ export function Background({ active }: SlideProps) {
 export function Content() {
   return (
     <Frame>
-      <Headline>Talk rules</Headline>
+      <Header>
+        <Headline>Talk rules</Headline>
+      </Header>
 
-      <div style={{ marginTop: 'auto', marginBottom: 'auto' }}>
+      <Body>
         {ORDER.map((idx, i) => {
           const r = RULES[idx];
           return (
@@ -34,7 +36,7 @@ export function Content() {
             />
           );
         })}
-      </div>
+      </Body>
     </Frame>
   );
 }

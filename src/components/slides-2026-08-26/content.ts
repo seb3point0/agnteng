@@ -1,7 +1,7 @@
 // ─────────────────────────────────────────────────────────────────────────
 // Per-meetup content for the Lisbon — 2026-08-26 deck. Same split as
 // ../slides/content.ts: geometry, palette and slide primitives are shared;
-// only TONIGHT, EVENTS, SPONSOR and the Luma event id are this meetup's own.
+// only TONIGHT, EVENTS, SPONSORS and the Luma event id are this meetup's own.
 // ─────────────────────────────────────────────────────────────────────────
 
 export const TONIGHT = {
@@ -36,16 +36,26 @@ export interface Sponsor {
   cta: { text: string; href: string };
 }
 
-// This month: PostHog. Swap all fields for whoever sponsors next month.
-export const SPONSOR: Sponsor = {
-  name: 'PostHog',
-  // Drop a logo file at public/assets/sponsors/posthog-logo.svg and point
-  // this at it — no logo supplied yet, so this stays a placeholder.
-  logo: null,
-  screenshot: '/assets/sponsors/posthog-screenshot.jpeg',
-  ask: 'PostHog Desktop brings coding agents, product context, and team processes into one app. Organize work in spaces, ask agents to produce code or interactive canvases, and turn product signals into action.',
-  cta: { text: 'posthog.com/desktop', href: 'https://posthog.com/desktop' },
-};
+// This month's sponsors — one slide per entry, in order. Swap or extend for
+// whoever sponsors next month.
+export const SPONSORS: Sponsor[] = [
+  {
+    name: 'PostHog',
+    // Drop a logo file at public/assets/sponsors/posthog-logo.svg and point
+    // this at it — no logo supplied yet, so this stays a placeholder.
+    logo: null,
+    screenshot: '/assets/sponsors/posthog-screenshot.jpeg',
+    ask: 'PostHog Desktop brings coding agents, product context, and team processes into one app. Organize work in spaces, ask agents to produce code or interactive canvases, and turn product signals into action.',
+    cta: { text: 'posthog.com/desktop', href: 'https://posthog.com/desktop' },
+  },
+  {
+    name: 'HackMeridian',
+    logo: null,
+    screenshot: '/assets/sponsors/hackmeridian-screenshot.jpeg',
+    ask: "Stellar's annual hackathon is happening October 25–26 in Lisbon. For two days, 500 builders will hack to claim a piece of the $30,000 prize pool.",
+    cta: { text: 'hackmeridian.com', href: 'https://hackmeridian.com' },
+  },
+];
 
 // Same copy as the sponsorship deck's slide 02 — a real sentence with a real
 // verb, not the meetup deck's fragment-style subhead.

@@ -1,6 +1,6 @@
 import { C, PAD, type SlideProps } from '../slides/deck';
 import { COMMUNITY, COMMUNITY_PHOTOS } from './content';
-import { Backdrop, Frame, Headline, Placeholder, Subhead } from '../slides/parts';
+import { Backdrop, Body, Frame, Header, Headline, Placeholder, Subhead } from '../slides/parts';
 
 // ─────────────────────────────────────────────────────────────────────────
 // 02 — The community. Title and subhead centred, not left-aligned — this
@@ -24,40 +24,40 @@ export function Background({ active }: SlideProps) {
 export function Content() {
   return (
     <Frame style={{ alignItems: 'center' }}>
-      <Headline style={{ textAlign: 'center' }}>{COMMUNITY.headline}</Headline>
-      <Subhead style={{ textAlign: 'center', lineHeight: 1.34, maxWidth: 1450, marginBottom: 48 }}>
-        {COMMUNITY.subhead}
-      </Subhead>
+      <Header style={{ textAlign: 'center' }}>
+        <Headline style={{ textAlign: 'center' }}>{COMMUNITY.headline}</Headline>
+        <Subhead style={{ textAlign: 'center', lineHeight: 1.34, maxWidth: 1450 }}>{COMMUNITY.subhead}</Subhead>
+      </Header>
 
-      <div
-        style={{
-          display: 'grid',
-          gridTemplateColumns: `repeat(${COLS}, ${CARD_W}px)`,
-          gap: GAP,
-          marginTop: 'auto',
-          marginBottom: 'auto',
-        }}
-      >
-        {COMMUNITY_PHOTOS.map((photo, i) =>
-          photo ? (
-            <img
-              key={i}
-              src={photo}
-              alt="Agentic Engineering"
-              style={{
-                width: CARD_W,
-                height: CARD_H,
-                objectFit: 'cover',
-                borderRadius: 20,
-                border: '1px solid rgba(181,166,255,0.18)',
-                background: C.panelNavy,
-              }}
-            />
-          ) : (
-            <Placeholder key={i} height={CARD_H} label="Photo" />
-          ),
-        )}
-      </div>
+      <Body>
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: `repeat(${COLS}, ${CARD_W}px)`,
+            gap: GAP,
+          }}
+        >
+          {COMMUNITY_PHOTOS.map((photo, i) =>
+            photo ? (
+              <img
+                key={i}
+                src={photo}
+                alt="Agentic Engineering"
+                style={{
+                  width: CARD_W,
+                  height: CARD_H,
+                  objectFit: 'cover',
+                  borderRadius: 20,
+                  border: '1px solid rgba(181,166,255,0.18)',
+                  background: C.panelNavy,
+                }}
+              />
+            ) : (
+              <Placeholder key={i} height={CARD_H} label="Photo" />
+            ),
+          )}
+        </div>
+      </Body>
     </Frame>
   );
 }
