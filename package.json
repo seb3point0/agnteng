@@ -8,12 +8,15 @@
     "slug": "agnteng",
     "tld": "agnteng.com"
   },
+  "packageManager": "npm@10.9.8",
   "scripts": {
     "dev": "astro dev --host 0.0.0.0 --port 4321",
-    "start": "astro dev --host 0.0.0.0 --port 4321",
+    "start": "varlock run -- node ./dist/server/entry.mjs",
     "build": "astro build",
     "preview": "astro preview --host 0.0.0.0 --port 4321",
-    "astro": "astro"
+    "astro": "astro",
+    "typecheck": "astro check",
+    "test": "vitest run"
   },
   "dependencies": {
     "@astrojs/node": "^9.5.0",
@@ -24,11 +27,15 @@
     "qrcode-generator": "^2.0.4",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
-    "tailwindcss": "^4.1.13"
+    "tailwindcss": "^4.1.13",
+    "varlock": "1.17.1",
+    "@varlock/1password-plugin": "2.0.4"
   },
   "devDependencies": {
+    "@astrojs/check": "^0.9.10",
     "@types/react": "^19.2.0",
     "@types/react-dom": "^19.2.0",
-    "typescript": "^5.9.0"
+    "typescript": "^5.9.0",
+    "vitest": "^4.1.11"
   }
 }

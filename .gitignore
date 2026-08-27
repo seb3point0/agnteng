@@ -10,3 +10,8 @@ npm-debug.log*
 .DS_Store
 *.local
 .vscode/
+
+# local secrets — schema itself is checked in, tracked for varlock
+.env*
+!.env.example
+!.env.schema
