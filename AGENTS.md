@@ -59,5 +59,5 @@ npm test             # vitest run
   ships to the browser via `client:*` — `LUMA_API_KEY` would end up in the
   client bundle.
 - The Luma event id and start time live in
-  `src/components/slides-2026-08-26/content.ts` — update there when a new
+  `src/components/slides-2026-09-23/content.ts` — update there when a new
   event's deck goes live, not by editing the API route.

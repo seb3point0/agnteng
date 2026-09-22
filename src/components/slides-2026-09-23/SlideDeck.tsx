@@ -1,0 +1,46 @@
+import DeckEngine from '../slides/DeckEngine';
+import type { Slide } from '../slides/deck';
+import type { AudienceData } from '../../lib/luma';
+import * as Title from './SlideTitle';
+import * as Community from './SlideCommunity';
+import { createAudienceSlide } from './SlideAudience';
+import { createSponsorSlide } from './SlideSponsor';
+import { createSupportSlide } from './SlideSupport';
+import * as Rules from './SlideRules';
+import * as LinksSlide from './SlideLinks';
+import { SPONSORS } from './content';
+
+// ─────────────────────────────────────────────────────────────────────────
+// The Lisbon — 2026-09-23 meetup deck.
+//
+// Title → community → who's in the room (live Luma audience mix) → this
+// month's sponsors (one slide per entry in SPONSORS) → support the meetup
+// (Luma supporter list) → talk rules → where to find us. Every slide here is
+// this deck's own — none are imported directly from ../slides, so nothing
+// about the earlier standing decks changes.
+//
+// Pressing "S" drops the deck into an unattended loop over the title slide,
+// the sponsor slides, and "where to find us" (10s each, in that order) —
+// sponsors asked to have their slide up during the meet-and-greet and
+// drinks, when nobody's on the clicker, and the links slide gives the room
+// something to scan while it's up. Pressing "S" again returns to normal
+// manual navigation.
+// ─────────────────────────────────────────────────────────────────────────
+
+export default function SlideDeck({
+  supporters,
+  audience,
+}: {
+  supporters: string[];
+  audience: AudienceData;
+}) {
+  const preSponsor: Slide[] = [Title, Community, createAudienceSlide(audience)];
+  const sponsorSlides = SPONSORS.map(createSponsorSlide);
+  const postSponsor: Slide[] = [createSupportSlide(supporters), Rules, LinksSlide];
+
+  const SLIDES: Slide[] = [...preSponsor, ...sponsorSlides, ...postSponsor];
+  // LinksSlide is always last in SLIDES — see the deck order above.
+  const loopIndices = [0, ...sponsorSlides.map((_, idx) => preSponsor.length + idx), SLIDES.length - 1];
+
+  return <DeckEngine slides={SLIDES} loopIndices={loopIndices} loopIntervalMs={10000} />;
+}
