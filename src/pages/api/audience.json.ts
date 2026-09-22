@@ -5,7 +5,7 @@ export const prerender = false;
 
 import type { APIRoute } from 'astro';
 import { getAllGuests, getEventAudience } from '../../lib/luma';
-import { LUMA_EVENT_API_ID, LUMA_EVENT_START_AT } from '../../components/slides-2026-08-26/content';
+import { LUMA_EVENT_API_ID, LUMA_EVENT_START_AT } from '../../components/slides-2026-09-23/content';
 
 export const GET: APIRoute = async () => {
   const guests = await getAllGuests(LUMA_EVENT_API_ID);
