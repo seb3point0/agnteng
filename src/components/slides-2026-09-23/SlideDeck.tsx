@@ -13,11 +13,15 @@ import { SPONSORS } from './content';
 // ─────────────────────────────────────────────────────────────────────────
 // The Lisbon — 2026-09-23 meetup deck.
 //
-// Title → community → who's in the room (live Luma audience mix) → this
-// month's sponsors (one slide per entry in SPONSORS) → support the meetup
-// (Luma supporter list) → talk rules → where to find us. Every slide here is
-// this deck's own — none are imported directly from ../slides, so nothing
-// about the earlier standing decks changes.
+// Title → community → this month's sponsors (one slide per entry in
+// SPONSORS) → who's in the room (live Luma audience mix) → support the
+// meetup (Luma supporter list) → talk rules → where to find us. Every slide
+// here is this deck's own — none are imported directly from ../slides, so
+// nothing about the earlier standing decks changes.
+//
+// Sponsors run before "who's in the room" rather than after it: the room
+// slide leads into the speakers, so anything between it and the talks is an
+// interruption.
 //
 // Pressing "S" drops the deck into an unattended loop over the title slide,
 // the sponsor slides, and "where to find us" (10s each, in that order) —
@@ -34,13 +38,15 @@ export default function SlideDeck({
   supporters: string[];
   audience: AudienceData;
 }) {
-  const preSponsor: Slide[] = [Title, Community, createAudienceSlide(audience)];
+  const intro: Slide[] = [Title, Community];
   const sponsorSlides = SPONSORS.map(createSponsorSlide);
-  const postSponsor: Slide[] = [createSupportSlide(supporters), Rules, LinksSlide];
+  const rest: Slide[] = [createAudienceSlide(audience), createSupportSlide(supporters), Rules, LinksSlide];
 
-  const SLIDES: Slide[] = [...preSponsor, ...sponsorSlides, ...postSponsor];
-  // LinksSlide is always last in SLIDES — see the deck order above.
-  const loopIndices = [0, ...sponsorSlides.map((_, idx) => preSponsor.length + idx), SLIDES.length - 1];
+  const SLIDES: Slide[] = [...intro, ...sponsorSlides, ...rest];
+  // Sponsors sit directly after `intro`, and LinksSlide is always last — both
+  // derived from the arrays rather than written as literals, so reordering the
+  // deck above cannot leave the loop pointing at the wrong slides.
+  const loopIndices = [0, ...sponsorSlides.map((_, idx) => intro.length + idx), SLIDES.length - 1];
 
   return <DeckEngine slides={SLIDES} loopIndices={loopIndices} loopIntervalMs={10000} />;
 }
