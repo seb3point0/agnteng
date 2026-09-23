@@ -26,8 +26,13 @@ export const LUMA_EVENT_START_AT = '2026-09-23T18:00:00.000Z';
 
 export interface Sponsor {
   name: string;
-  // Image paths under /assets. Falls back to a labelled placeholder box when
-  // unset — see SlideSponsor.tsx.
+  // A finished, full-slide artwork under /assets. When set, it IS the slide —
+  // the name/ask/cta/QR composition below is skipped entirely and the image
+  // fills the stage. Authored 16:9; see SlideSponsor.tsx for how a projector
+  // that isn't 16:9 is handled.
+  fullBleed: string | null;
+  // The composed-slide fields. Only read when fullBleed is null. Image paths
+  // under /assets; each falls back to a labelled placeholder box when unset.
   logo: string | null;
   screenshot: string | null;
   // What they need from the room: hiring, raising, intros, "try the product" —
@@ -44,6 +49,11 @@ export interface Sponsor {
 export const SPONSORS: Sponsor[] = [
   {
     name: 'HackMeridian',
+    // HackMeridian supplied a finished slide, so it replaces the composition
+    // wholesale. The artwork carries its own QR, and that QR decodes to the
+    // same tracked url as cta.href below — verified, not assumed — so nothing
+    // is lost by not drawing ours.
+    fullBleed: '/assets/sponsors/hackmeridian-slide.png',
     logo: null,
     screenshot: '/assets/sponsors/hackmeridian-screenshot.jpeg',
     ask: "Stellar's annual hackathon is happening October 25–26 in Lisbon. For two days, 500 builders will hack to claim a piece of the $30,000 prize pool.",
