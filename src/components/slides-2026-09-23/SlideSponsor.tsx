@@ -1,4 +1,4 @@
-import { C, type Slide, type SlideProps } from '../slides/deck';
+import { C, STAGE_H, STAGE_W, type Slide, type SlideProps } from '../slides/deck';
 import { Backdrop, Body, Frame, Header, Headline, Placeholder, QRCode, Subhead } from '../slides/parts';
 import type { Sponsor } from './content';
 
@@ -14,6 +14,9 @@ import type { Sponsor } from './content';
 //
 // Logo and screenshot fall back to a labelled placeholder box when unset,
 // so an unfilled slide never ships a broken image.
+//
+// A sponsor who sends finished artwork instead gets `fullBleed` set, and that
+// image becomes the whole slide — see FullBleed below.
 // ─────────────────────────────────────────────────────────────────────────
 
 const TEXT_W = 620;
@@ -90,8 +93,47 @@ function Content({ sponsor, active }: { sponsor: Sponsor; active: boolean }) {
   );
 }
 
+// ── Full-slide artwork ───────────────────────────────────────────────────
+//
+// The artwork is authored 16:9, the same shape as the stage, so it goes in
+// the CONTENT layer at exactly STAGE_W×STAGE_H — never the background layer.
+// DeckEngine scales content by a single transform and leaves backgrounds at
+// full viewport, so a background image would be `cover`-cropped on any
+// projector that isn't 16:9, and this artwork carries text and a QR hard
+// against all four edges. Letterboxing it is the only way nothing is lost.
+//
+// What would normally show as bars is instead painted ARTWORK_EDGE, sampled
+// from the image's own corners — so on a 16:10 or 4:3 projector the slide
+// still reads as edge-to-edge colour rather than a framed picture.
+//
+// No link wrapper: the QR is in the artwork, and an anchor over the whole
+// stage would swallow the click that advances the deck.
+const ARTWORK_EDGE = '#fdda24';
+
+function FullBleedBackground() {
+  return <div style={{ position: 'absolute', inset: 0, background: ARTWORK_EDGE }} />;
+}
+
+function FullBleedContent({ src, name }: { src: string; name: string }) {
+  return (
+    <img
+      src={src}
+      alt={`${name} — tonight's sponsor`}
+      style={{ display: 'block', width: STAGE_W, height: STAGE_H, objectFit: 'contain' }}
+    />
+  );
+}
+
 /** One slide per sponsor — called once per entry in SPONSORS. */
 export function createSponsorSlide(sponsor: Sponsor): Slide {
+  if (sponsor.fullBleed) {
+    const src = sponsor.fullBleed;
+    return {
+      Background: FullBleedBackground,
+      Content: () => <FullBleedContent src={src} name={sponsor.name} />,
+    };
+  }
+
   return {
     Background,
     Content: (p) => <Content sponsor={sponsor} active={p.active} />,
