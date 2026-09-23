@@ -48,13 +48,13 @@ npm test             # vitest run
   are the gate for now.
 - **4 pre-existing `astro check` errors** in mockup/exporter code, tracked in
   issue #2 — not blocking, but CI will show them until fixed.
-- **`LUMA_API_KEY` still resolves through `.env.schema` → `sa-project-agnteng`**,
-  which requires a 1Password vault + service account that doesn't exist yet.
-  Until that's provisioned, Dokploy carries `LUMA_API_KEY` directly instead of
-  `OP_TOKEN`/`APP_ENV` — see the `dev` branch PR for the cutover plan. Merging
-  that PR before the vault exists ships a container that boots through
-  `varlock run --` against a vault that isn't there, so every Luma-backed
-  slide renders empty.
+- **`LUMA_API_KEY` resolves from the `sa-project-agnteng` 1Password vault** via
+  `varlock run --` in the Dockerfile. The vault item is named `luma-api-token`,
+  NOT `LUMA_API_KEY` — the schema reference must match the item's real name or
+  varlock fails with `itemNotFound`, the app starts anyway with the key unset,
+  and every Luma-backed slide silently renders empty. Verify a change to this
+  in a directory with no `.env` present: varlock falls back to `.env` locally,
+  so testing from the repo root passes even when the vault reference is wrong.
 
 ## Agent rules
 
