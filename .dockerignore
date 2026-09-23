@@ -7,6 +7,3 @@ dist
 npm-debug.log*
 .DS_Store
 .vscode
-
-.env*
-!.env.schema
