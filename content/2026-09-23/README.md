@@ -18,6 +18,24 @@ article is tracked.
 Original filenames in `raw/` are left alone so a clip can always be traced back
 to the source file and timecode it came from.
 
+## Making the clips
+
+```sh
+python3 scripts/meetup_video.py probe      content/2026-09-23
+python3 scripts/meetup_video.py transcribe content/2026-09-23   # needs XAI_API_KEY
+python3 scripts/meetup_video.py cut        content/2026-09-23 --talk 'Name@START-END' …
+```
+
+Transcription is xAI `grok-voice-transcribe-2.0`, biased toward the speaker and
+company names in `src/components/slides-2026-09-23/content.ts`. Put
+`XAI_API_KEY=...` in the repo-root `.env` (gitignored).
+
+`work/` holds the transcripts — tracked, they're small and worth keeping next to
+the write-up. `work/audio.mp3` is not. The full workflow, including how to read
+the transcript for talk boundaries, is in `.claude/skills/meetup-video/`.
+
+Source: `raw/C0083.MP4` — 45.9 min, 1920x1080, 21.4 GB (uncompressed PCM audio).
+
 ## The event
 
 - **Venue:** Lunar Strategy, Av. Duque de Loulé 24A, Lisboa
