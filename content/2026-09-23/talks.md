@@ -46,6 +46,18 @@ Jeremy's [X](X_URL), [GitHub](GITHUB_URL), [LinkedIn](LINKEDIN_URL)
 
 ---
 
+## The clips
+
+| File | Span | Length | Opens / closes on |
+|---|---|---|---|
+| `clips/01-tim-haldorsson.mp4` | 7:58–18:13 | 10.2 min | "All right. So today I'm going to dive into Grokbot" → "Thanks so much for listening. [applause]" |
+| `clips/02-doris-hernandez-argueta.mp4` | 19:23–29:48 | 10.4 min | "Hi guys, thank you so much for hosting this" → "that's pretty much it. Thank you so much. [applause]" |
+| `clips/03-jeremy-healsmith.mp4` | 31:18–41:21 | 10.1 min | "Hello, I'm Jeremy" → "thank you very much. [applause]" |
+
+Each boundary was checked against the audio of the finished clip, not just the
+transcript. ~750 MB each: the camera shoots 1080p100, so the clips inherit that
+frame rate. Re-cut with `-r 30` if upload size matters.
+
 ## Still missing
 
 - **Video URLs** for all three, once they're uploaded.
