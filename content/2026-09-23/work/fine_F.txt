@@ -1,0 +1,56 @@
+[27:30] Try again. Yep, I'm trying again.
+
+[27:35] Is it working?
+
+[27:40] Oh, I got a lot of posts. Lots of posts.
+
+[27:45] Let's see.
+
+[27:50] it says that it's not able to connect to the TV you see
+
+[27:55] He's so pure though.
+
+[28:00] [silence]
+
+[28:05] Yeah, I can continue without it. No worries. And It's two minutes left. Yeah. So
+
+[28:10] The only thing I the only two things that I take away from this, you know, I've been experimenting and building a
+
+[28:15] is that stage number one is try to get your product working. I really believe
+
+[28:20] hern especially if you're like in the internal herne like internal building an internal harness
+
+[28:25] Ed you get, understand where you're trying to automate first, and then automate it. Because once you automate it,
+
+[28:30] you know the goal, it's going to be very easy to do it. But if you don't know, it's actually more time trying to figure out how to do
+
+[28:35] made it. And that's kind of like what I've learned across time is first get the product working and
+
+[28:40] then automate the known workflow. And once you automate it, it's extremely quick.
+
+[28:45] again, my experiment of 30 hours, it took 30 hours but before that we were probably working on it.
+
+[28:50] that like seven weeks to to build that stage, but once I knew what I want to
+
+[28:55] It was just like pretty quickly and we got the output was like an 85% of what we
+
+[29:00] wanted, which is still pretty good, all things considered. And the the takeaway
+
+[29:05] This will be I think the biggest biggest one is that, you know, I
+
+[29:10] uh if you know the outcome, you can create a harness, create a loop until you get
+
+[29:15] to that outcome. Even today, uh, Opus 5.5.5 instructions were like
+
+[29:20] define what is done. And the A is now are getting better and better to get to
+
+[29:25] that done. And that's the the biggest moment for me that I continue to repeat in
+
+[29:30] is you know the outcome. You the agent will be very good to figure out
+
+[29:35] about how to get to where I'm going. So, that's uh pretty much it. Thank you so much. [applause]
+
+[29:40] [applause]
+
+[29:45] [silence]
+

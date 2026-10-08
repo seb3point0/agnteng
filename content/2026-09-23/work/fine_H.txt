@@ -1,0 +1,81 @@
+[42:10] and then they'll have to provide this one Yeah, so so that's that's the
+
+[42:15] really relevant question. I'm super glad you asked. Thank you. No, I the specific case I'm envisioning
+
+[42:20] is um we have aid workers in Gaza
+
+[42:25] who are getting the job done. Uh, and then the IDF comes
+
+[42:30] and uh subpoenas or just like requisitions, their machines are
+
+[42:35] And so just from those session logs we can we can identify
+
+[42:40] Exactly who these people have been interacting with. So I think the the vector
+
+[42:45] is um is probably government agency but definitely for uh
+
+[42:50] uh sophisticated attackers that you that you could you know put a man in the middle
+
+[42:55] type attack as well.
+[silence]
+
+[43:00] [silence] Thanks, I don't know how to turn this off, so I'm about to give a speech.
+
+[43:05] crazy feedback. [laughter] Oh, thanks guys. I just want to show you
+
+[43:10] is the output cause I was able to present it to you guys. the output of the hardness that I built in my
+
+[43:15] weekend and is something that you actually guys can test out. And so it's it's a
+
+[43:20] It was actually doing a video about this. Let's see.
+
+[43:25] Give me a sec.
+
+[43:30] Yeah. [silence]
+
+[43:35] Oh no. Technology
+
+[43:40] She's against me.
+
+[43:45] [silence]
+
+[43:50] Let's see again. Hopefully, I'm going to get it right quick.
+
+[43:55] Great. So this is the output of over 30 hours. We
+
+[44:00] He basically want to enable you know by coders or when you are starting a new.
+
+[44:05] project, you want, you know, starting a project now is pretty, it's easier, it's democratized.
+
+[44:10] So how can you make your product actually yours? And this is what Sendo is building. You are able
+
+[44:15] to create a uh visual identity and basically visual identity as a software
+
+[44:20] where you have all the components, all the design and D, or everything that has to do with your revenue.
+
+[44:25] uh in a single place. So the in 30 hours the agents were able to
+
+[44:30] create this whole system, the engine that is behind this, which is actually a harness system.
+
+[44:35] we actually give the input image, then you are able to select the direction that you want from a range of
+
+[44:40] and then what people can feel. And who is it for and after doing
+
+[44:45] that we actually generate you different types of rent just by the image that you gave us and it
+
+[44:50] They give you all the components that you can use in your product right away. And they'
+
+[44:55] is like, you know, if you're building a product, you don't want to, you know, look at it like a y-swap. uh,
+
+[45:00] to provide you with all this. So, this is what happened after 30 hours building Starship. So, thank you very much, guys.
+
+[45:05] [applause]
+
+[45:10] Seno.design [laughter] Seno.design. Correct.
+
+[45:15] [silence]
+
+[45:20] [silause]
+
+[45:25] [silence]
+

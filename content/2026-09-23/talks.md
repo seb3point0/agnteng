@@ -51,7 +51,7 @@ Jeremy's [X](X_URL), [GitHub](GITHUB_URL), [LinkedIn](LINKEDIN_URL)
 | File | Span | Length | Opens / closes on |
 |---|---|---|---|
 | `clips/01-tim-haldorsson.mp4` | 7:58–18:13 | 10.2 min | "All right. So today I'm going to dive into Grokbot" → "Thanks so much for listening. [applause]" |
-| `clips/02-doris-hernandez-argueta.mp4` | 19:23–29:48 | 10.4 min | "Hi guys, thank you so much for hosting this" → "that's pretty much it. Thank you so much. [applause]" |
+| `clips/02-doris-hernandez-argueta.mp4` | spliced, see below | 10.9 min | "Hi guys, thank you so much for hosting this" → the demo, ending "thank you very much, guys. [applause]" |
 | `clips/03-jeremy-healsmith.mp4` | 31:18–41:21 | 10.1 min | "Hello, I'm Jeremy" → "thank you very much. [applause]" |
 
 Each boundary was checked against the audio of the finished clip, not just the
@@ -71,12 +71,30 @@ frame rate. Re-cut with `-r 30` if upload size matters.
 
 ## Two things worth knowing about the cut
 
-**Doris's talk has an addendum.** Her screen share died around 28:30 ("it's not
-able to connect to the TV") and she finished without the demo. She came back
-after Jeremy's talk, at **43:00–45:15**, to show the output — the visual-identity
-harness and `senddo.design`. That segment is *not* in her clip, because it isn't
-contiguous with her talk. It's worth appending if the video is edited rather
-than cut.
+**Doris's clip is spliced from four spans.** Her screen share died mid-talk and
+she finished without the demo, then came back after Jeremy's talk to show it.
+The clip removes both dead patches and appends the recovered demo:
+
+| Span | What |
+|---|---|
+| 19:23–27:08 | the talk, up to the moment the demo fails |
+| 28:10–29:48 | *(62s of the failed demo cut)* takeaways, close, applause |
+| 43:07–43:19 | her bridge: "I just want to show you the output" |
+| 43:54–45:15 | *(34s of a second fumble cut)* the demo, close, applause |
+
+The demo is **appended rather than injected** into the gap where it failed.
+Injecting it there would have her deliver the demo and then say "I can continue
+without it" — the surrounding audio contradicts the splice. As a coda it plays
+naturally, and her bridge line explains why it's there.
+
+Rebuild it with:
+
+```sh
+python3 scripts/meetup_video.py splice content/2026-09-23 \
+  --out '02-doris-hernandez-argueta' \
+  --span '19:23-27:08' --span '28:10-29:48' \
+  --span '43:07-43:19' --span '43:54-45:15'
+```
 
 **Q&A is excluded.** The host held questions to the end, so the Q&A at
 41:20–43:00 covers all three talks at once and doesn't belong to any single

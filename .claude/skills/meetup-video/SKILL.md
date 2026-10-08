@@ -74,6 +74,28 @@ Start at the speaker's first word, not the host's last. End after the applause
 finishes, not on the closing line — cutting tight sounds abrupt. Two seconds of
 air before, three after.
 
+### Rebuilding a talk that isn't contiguous
+
+A talk whose demo failed live and got shown later, or that has a minute of dead
+air while someone fights a projector, is assembled from spans:
+
+```sh
+python3 scripts/meetup_video.py splice content/<date> --out '02-name' \
+  --span '19:23-27:08' --span '28:10-29:48' --span '43:54-45:15' --dry-run
+```
+
+Spans play in the order given. Each is encoded with identical settings so the
+joins concatenate without re-encoding, and the result is checked against the sum
+of the spans.
+
+**Append the late material, don't inject it.** On 2026-09-23 the obvious move
+was to drop the recovered demo into the gap where it failed — but the audio
+either side contradicts that: she says "I can continue without it" moments after
+where the demo would now sit. Appended after her closing applause it plays as a
+coda, and her own bridge line ("I just want to show you the output") explains
+why it's there. Check what the speaker *says* around a splice before deciding
+where it goes.
+
 ## Traps, all of them hit for real
 
 **Silence detection does not work in a live room.** `silencedetect` at -30dB

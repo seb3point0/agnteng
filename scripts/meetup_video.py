@@ -504,6 +504,67 @@ def cut_clip(src: Path, dest: Path, start: float, end: float, mode: str) -> None
         die(f"cut failed for {dest.name}: {r.stderr.strip()[-500:]}")
 
 
+def cmd_splice(args) -> None:
+    """Build one clip from several spans of the source.
+
+    For a talk that has to be reassembled: a demo that failed live and was shown
+    later, dead air while someone fights a projector, a question that interrupts.
+    Each span is encoded with identical settings so the pieces concatenate
+    without a re-encode of the join.
+    """
+    d = event_dir(args.event)
+    src = find_source(d)
+    total = probe(src).duration
+    clips = d / "clips"
+    clips.mkdir(exist_ok=True)
+
+    spans = []
+    for spec in args.span:
+        if "-" not in spec:
+            die(f"--span needs START-END, got {spec!r}")
+        a, _, b = spec.partition("-")
+        start, end = parse_ts(a), parse_ts(b)
+        if end <= start:
+            die(f"span {spec}: end must be after start")
+        if end > total + 1:
+            die(f"span {spec}: end {hm(end)} is past the source ({hm(total)})")
+        spans.append((start, end))
+
+    out = clips / f"{args.out}.mp4"
+    kept = sum(e - s for s, e in spans)
+    print(f"source: {src.name}  ({hm(total)})")
+    for i, (s, e) in enumerate(spans, 1):
+        print(f"  part {i}  {hm(s)} → {hm(e)}  ({(e-s)/60:5.2f} min)")
+    print(f"  → {out.name}  ({kept/60:.2f} min from {len(spans)} parts)")
+    if args.dry_run:
+        print("\n(dry run, nothing written)")
+        return
+
+    work = d / "work" / "_splice"
+    work.mkdir(parents=True, exist_ok=True)
+    parts = []
+    for i, (s, e) in enumerate(spans):
+        part = work / f"part{i:02d}.mp4"
+        print(f"encoding part {i+1}/{len(spans)}…", file=sys.stderr)
+        cut_clip(src, part, s, e, args.mode)
+        parts.append(part)
+
+    listing = work / "concat.txt"
+    listing.write_text("".join(f"file '{p.resolve()}'\n" for p in parts))
+    r = run(["ffmpeg", "-y", "-f", "concat", "-safe", "0", "-i", str(listing),
+             "-c", "copy", "-movflags", "+faststart", str(out)])
+    if r.returncode != 0:
+        die(f"concat failed: {r.stderr.strip()[-500:]}")
+
+    got = probe(out).duration
+    drift = got - kept
+    flag = "" if abs(drift) < 1.5 else f"  ⚠ {drift:+.1f}s vs the sum of the spans"
+    print(f"\n  {out}  ({got/60:.2f} min){flag}")
+    for p in parts:
+        p.unlink(missing_ok=True)
+    listing.unlink(missing_ok=True)
+
+
 def cmd_cut(args) -> None:
     d = event_dir(args.event)
     src = find_source(d)
@@ -582,6 +643,15 @@ def main() -> None:
                         "copy: instant but snaps to keyframes")
     p.add_argument("--dry-run", action="store_true")
     p.set_defaults(func=cmd_cut)
+
+    p = sub.add_parser("splice", help="build one clip from several spans")
+    p.add_argument("event")
+    p.add_argument("--span", action="append", required=True, metavar="START-END",
+                   help="repeat in playback order, e.g. --span 19:23-27:08")
+    p.add_argument("--out", required=True, help="output basename, no extension")
+    p.add_argument("--mode", choices=["hw", "x264", "copy"], default="hw")
+    p.add_argument("--dry-run", action="store_true")
+    p.set_defaults(func=cmd_splice)
 
     args = ap.parse_args()
     args.func(args)

@@ -1,0 +1,36 @@
+[26:10] Yeah, I knew how the API was to I knew as well how the engine needed to run, and I knew the QA that
+
+[26:15] is to do. So it was NDPN job was making sure that every time there was a PR,
+
+[26:20] you could check and actually run the other agent. So it was an orchestration of all this multiple tasks that you would
+
+[26:25] doing real life. But because the outcome was I knew the outcome
+
+[26:30] Then I was able to automate it. I was another interesting part is that you will have to
+
+[26:35] you're steering this, right? So I was making sure that it was always on.
+
+[26:40] One of the things in choose that I use, I use the YML, YAML uh for for it.
+
+[26:45] So I told the EPM because sometimes you see you use cloud and it will say like API
+
+[26:50] expired or it stops running. Well, I basically set up a heartbeat to be always checking every
+
+[26:55] and minutes that everyone is on. And if there is a PR from, you know, the back and agent, the PR
+
+[27:00] are the PM agent will check whether it was right or wrong or if you needed to call the QA
+
+[27:05] So
+
+[27:10] I don't know what happened there.
+
+[27:15] [silence]
+
+[27:20] Good thing I'm stealing time. I'm just positive. I know it's worse.
+
+[27:25] Okay. What happened? You mind?
+
+[27:30] Try again. Yep, I'm trying again.
+
+[27:35] Is it working?
+
