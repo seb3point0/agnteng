@@ -16,6 +16,7 @@ npm-debug.log*
 # anything over 100MB. The write-up in content/*/ is tracked; the video is not.
 content/**/raw/*
 content/**/clips/*
+content/**/upload/*
 *.mp4
 *.mov
 *.mkv
