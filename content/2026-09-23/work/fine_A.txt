@@ -1,0 +1,36 @@
+[7:00] So that I don't have to be the asshole. I I this this this will do it for me happily. [laughter]
+
+[7:05] uh and, you know, make your talk useful so people should walk away having learned something.
+
+[7:10] And here's where you can find us. Please join the Telegram, that's where we
+
+[7:15] posts about new events and folks are in there sharing stuff that working on. And uh
+
+[7:20] Every time we do a meetup there's also a recap article with all the talk videos that goes up on
+
+[7:25] sub stack and YouTube. So, you can come up, So, Tim, you can come up for your your talk.
+
+[7:30] [silence]
+
+[7:35] [silence]
+
+[7:40] [silence]
+
+[7:45] [silence]
+
+[7:50] [silence]
+
+[7:55] [silence]
+
+[8:00] Alright
+
+[8:05] So today I'm going to dive into Gropbot. Gropbot is the heart
+
+[8:10] from uh SpaceX. And I'm going to dive into like how
+
+[8:15] I have set up my own flows, and my own recurring tasks that are happening every day. I'm going
+
+[8:20] [silence]
+
+[8:25] and delving into a little bit how you can think about setting them up and what
+

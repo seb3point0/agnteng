@@ -5,130 +5,121 @@ description: Turn an Agentic Engineering meetup recording into per-talk video cl
 
 # Meetup video → clips + descriptions
 
-One camera file per event. An optional intro nobody wants cut, then three
-~10 minute talks. The job: find where each talk starts and ends, cut them out,
-and write a description for each in the house style.
-
-`scripts/meetup_video.py` owns the mechanical half. Reading the transcript and
-deciding the boundaries is yours — see **Why boundaries aren't automated**.
+One camera file per event. An opening by the host that nobody wants cut, then
+three ~10 minute talks separated by applause and a setup break. The job: find
+each talk, cut it, and describe it in the house style.
 
 ## Setup, once
 
-`XAI_API_KEY` in `.env` at the repo root (gitignored). Transcription is xAI's
-`grok-voice-transcribe-2.0`. `ffmpeg` and `ffprobe` must be on PATH.
+`OPENROUTER_API_KEY` in `.env` at the repo root (gitignored). `ffmpeg` and
+`ffprobe` on PATH.
+
+**Transcription goes through OpenRouter's chat-completions API with an
+`input_audio` content block.** OpenRouter does *not* proxy a speech-to-text
+endpoint — there is no `/v1/audio/transcriptions`, and xAI's
+`grok-voice-transcribe-2.0` is not reachable through it. Audio-capable chat
+models are, and `google/gemini-2.5-flash` is the cheap, accurate default
+(roughly $0.003 per 90 seconds; a 46-minute event costs well under a dollar).
 
 ## The workflow
 
-### 1. Confirm what landed
-
 ```sh
 python3 scripts/meetup_video.py probe content/<YYYY-MM-DD>
-```
 
-Duration, codecs, size. If it's much shorter than an event, the camera split the
-recording — the script takes the largest file in `raw/` and says so. Ask before
-proceeding on a partial file.
+python3 scripts/transcribe_chunks.py content/<YYYY-MM-DD>/work/audio.mp3 \
+  --out content/<YYYY-MM-DD>/work/coarse.json --seconds 60 --workers 10
 
-### 2. Transcribe
+python3 scripts/detect_talks.py content/<YYYY-MM-DD>
 
-```sh
-python3 scripts/meetup_video.py transcribe content/<YYYY-MM-DD>
-```
-
-Extracts mono 16 kHz mp3, sends it to xAI, and writes into `content/<date>/work/`:
-
-| File | What |
-|---|---|
-| `transcript.timed.txt` | **Read this one.** One line per speaker-turn, each with a seekable timecode and speaker label |
-| `boundaries.txt` | Candidate cut points — long pauses, speaker changes ranked first, with the words either side |
-| `transcript.txt` | Flat text, for writing the descriptions |
-| `transcript.json` | Raw API response, word-level timings |
-| `keyterms.txt` | What the model was biased toward |
-
-Two options do most of the quality work, both on by default:
-
-- **`keyterm`** biases the model toward terms it would otherwise mangle. Seeded
-  automatically from that event's `src/components/slides-<date>/content.ts` —
-  speaker names, their companies, the sponsor — plus a standing vocabulary of
-  agentic-engineering jargon. Add more with `--keyterm 'Some Product'`. This is
-  what stops "Altana Network" coming back as "Atlanta network".
-- **`diarize`** labels each word with a speaker. A speaker change at a long
-  pause is a much stronger handover signal than either alone.
-
-Long recordings: `--chunk-minutes 20` splits the audio and stitches the
-timestamps back onto the original timeline. Only needed past the API's 500 MB
-ceiling — about 17 hours at this bitrate — or if a single request times out.
-
-### 3. Find the boundaries — read, don't guess
-
-Open `transcript.timed.txt`. Start from `boundaries.txt`, but confirm every cut
-against the transcript. What you're looking for:
-
-- **Start of a talk:** the host finishing an introduction — "please welcome",
-  "our next speaker is", "take it away" — then a speaker change. The talk starts
-  at the *new speaker's first word*, not at the host's last.
-- **End of a talk:** "thank you", applause, the host coming back. End *after*
-  the applause, not on the speaker's last word — cutting tight sounds abrupt.
-- **The intro is not a talk.** Leave it out unless asked.
-- **Expect three.** Fewer means a handover was missed; more means a mid-talk
-  pause was mistaken for one. Both are reasons to re-read, not to proceed.
-
-Give a couple of seconds of air either side. Then state the boundaries you found
-and what evidence put them there, so they can be corrected before anything is
-encoded.
-
-### 4. Cut
-
-```sh
 python3 scripts/meetup_video.py cut content/<YYYY-MM-DD> \
-  --talk 'Tim Haldorsson@12:04-22:31' \
-  --talk 'Doris Hernandez Argueta@24:10-34:02' \
-  --talk 'Jeremy Healsmith@35:48-45:30' --dry-run
+  --talk 'Name@7:58-18:13' --talk … --dry-run
 ```
 
-`--dry-run` first — it prints the spans and durations without encoding. A talk
-far off ten minutes is a wrong boundary. Drop the flag to write
-`clips/01-tim-haldorsson.mp4` and so on.
+`meetup_video.py transcribe` is the older single-request path and is **not**
+used — it targets the xAI endpoint directly. Use `transcribe_chunks.py`.
 
-`--mode hw` (the default) is hardware H.264 on Apple Silicon: frame accurate and
-fast. `--mode copy` is instant and lossless but snaps to the nearest keyframe,
-so a clip can start up to a GOP early and open on a frozen frame — the script
-warns when the result drifts more than a second from what was asked for. Use it
-only for a rough check.
+### Why two passes
 
-### 5. Write the descriptions
+Timing and context pull in opposite directions:
 
-Read `references/descriptions.md` for the house format and six real examples,
-then write one description per talk into `content/<date>/talks.md`.
+- **coarse** — 60s chunks over the whole recording. Shows the shape of the
+  event, but locates a boundary only to within a minute.
+- **fine** — 5s chunks in a 90s window around each coarse boundary. Pins the
+  exact second a speaker opens or applause dies.
 
-Speaker names and affiliations come from
-`src/components/slides-<date>/content.ts`. Luma has the registration data if
-something is missing — `src/lib/luma.ts` is the client, and the event id is in
-that same `content.ts`.
+`detect_talks.py` runs both and writes `work/talks.json`.
 
-Leave placeholders for anything not on hand — video URLs, social links — and
-list what's missing at the end. Don't block on metadata, and don't invent a
-link.
+### Timing comes from the chunk grid, never from the model
 
-## Why boundaries aren't automated
+A model asked to timestamp 46 minutes of audio drifts, and **the drift is
+invisible** — the text reads fine while the numbers wander. Chunk `i` starts at
+`i * seconds` because that is where ffmpeg cut it, so timing is exact by
+construction and the model is only ever asked *what* was said. The structural
+judgement — which handover starts which talk — is the one part worth a model.
 
-Silence alone is a bad signal: speakers pause mid-talk, rooms applaud mid-talk,
-a demo sits quiet for thirty seconds. Diarization alone is no better — a Q&A
-exchange looks exactly like a handover. The reliable signal is what's actually
-said at the transition, which needs reading.
+### What a boundary looks like
 
-So the script gathers evidence and something that can read decides. A wrong
-boundary wastes an encode and ships a clip that opens mid-sentence; the minute
-spent reading the transcript is cheaper than either.
+From the 2026-09-23 recording, which is the reference case:
+
+```
+ 7:25 | So, Tim, you can come up for your talk.     ← host hands over
+ 7:30 | [silence]                                    ← setup
+ 8:00 | Alright                                      ← TALK STARTS
+18:00 | That was it. Thanks so much for listening. [applause]
+18:05 | [applause]
+18:10 | I have the $200 one and I have never hit the max.   ← TALK ENDS, chatter
+```
+
+Start at the speaker's first word, not the host's last. End after the applause
+finishes, not on the closing line — cutting tight sounds abrupt. Two seconds of
+air before, three after.
+
+## Traps, all of them hit for real
+
+**Silence detection does not work in a live room.** `silencedetect` at -30dB
+found exactly one gap in 46 minutes. Forty people in a room never drop that low.
+The transcript is the signal; acoustic analysis is not.
+
+**A window past the end of the file makes the model hallucinate.** ffmpeg
+produces empty chunks and the model invents plausible speech to fill them — on
+this recording it produced confident applause and dialogue for audio that does
+not exist. `transcribe_chunks.py` clamps to the real duration; do not remove
+that.
+
+**A coarse chunk can be wrong where a fine chunk is right.** The 30:00 coarse
+chunk reported a Q&A exchange that the 5s pass showed to be 90 seconds of
+silence. Shorter windows give the model less room to drift. When they disagree,
+trust the fine pass.
+
+**Count the talks before trusting the structure.** On this recording the third
+speaker's segment appeared to run to 45:15, which would have made it a 14-minute
+talk. It was actually two things: Jeremy's talk ending at 41:10, and the
+*second* speaker returning at 43:00 to demo what a screen-share failure stopped
+her showing live. A talk far off ten minutes is a wrong boundary, not a long
+talk — go back and read.
+
+**zsh does not word-split unquoted variables.** `for w in "a b c"; do set -- $w`
+silently passes empty arguments. Write the invocations out.
+
+## Writing the descriptions
+
+Read `references/descriptions.md` — the house format and six real examples from
+the Substack. Write one per talk into `content/<date>/talks.md`.
+
+Speaker names and affiliations come from `src/components/slides-<date>/content.ts`.
+The transcript is the better source for what was actually said — the planned
+line-up and the real one differ. On 2026-09-23 the host confirmed the second
+speaker's name only in passing at 41:35 ("or Jeremy or Doris"), which is the
+kind of detail worth grepping for.
+
+Leave placeholders for video URLs and social links, and list what is missing at
+the end. Never guess a handle.
 
 ## Gotchas
 
-- **Never edit `raw/`.** Original filenames stay as they are so a clip can
-  always be traced back to its source and timecode.
-- **Media is gitignored.** `raw/` and `clips/` contents, and every common video
-  and audio extension. `talks.md` and `README.md` are tracked.
-- **`work/` is disposable** but not gitignored by the media rules — the
-  transcripts are small and worth keeping alongside the write-up.
-- **Check the speaker count** against the event's `SPEAKERS` in `content.ts`
-  before trusting diarization. The host counts as a speaker, so three talks
-  usually means four or more labels.
+- **Never edit `raw/`.** Original filenames stay so a clip traces back to its
+  source and timecode.
+- **Media is gitignored**, `raw/` and `clips/` contents and every common video
+  and audio extension. `talks.md`, `README.md` and the transcripts are tracked.
+- **Check the source frame rate.** This camera records 1080p100, so clips are
+  large. Add `-r 30` to the cut if that matters for upload.
