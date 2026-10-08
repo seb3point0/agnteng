@@ -10,3 +10,23 @@ npm-debug.log*
 .DS_Store
 *.local
 .vscode/
+
+# event media — raw camera files and ffmpeg output.
+# A single talk recording outweighs the whole repo, and GitHub rejects
+# anything over 100MB. The write-up in content/*/ is tracked; the video is not.
+content/**/raw/*
+content/**/clips/*
+*.mp4
+*.mov
+*.mkv
+*.m4v
+*.avi
+*.wav
+*.m4a
+*.mp3
+# keep the folder shape so a new event starts from the same layout.
+# These negate the two globs above — which must end in /* rather than /, since
+# git does not descend into an ignored directory and the negation would never
+# be reached.
+!content/**/raw/.gitkeep
+!content/**/clips/.gitkeep
