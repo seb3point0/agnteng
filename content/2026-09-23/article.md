@@ -20,15 +20,14 @@ Three talks, ten minutes each. Here's what they covered.
 
 [A Bot for Every Part of the Job](**VIDEO_URL_1**)
 
-Tim Haldorsson walks through the Grokbot setup his marketing team runs daily, one agent per area of the work.
+Tim Haldorsson shows the Grokbot setup his marketing agency runs on, with a separate bot for each part of his day.
 
 Main Takeaways
 
-An agent is a goal, a harness in the middle, and the data you feed it
-One bot per area of daily work: intel, outreach, content, experiments, images
-His intel bot replaced six news sites, delivering relevant articles twice a day
-An "overheard" bot catches Reddit and X mentions a team would otherwise miss
-Agents grouped into teams share one conversation, each keeping its own history
+He replaced the six sites he used to read every morning with one bot that briefs him twice a day
+An "overheard" bot watches Reddit and X for mentions the team would otherwise hear about secondhand
+His content and BD "teams" are several agents in one chat, each with its own history, and he asks them for status like people
+Grokbot is free with X Premium and comes with X API credits, which is why he moved off everything else
 
 Tim's [X](**X_URL**), [LinkedIn](**LINKEDIN_URL**)
 
@@ -36,15 +35,14 @@ Tim's [X](**X_URL**), [LinkedIn](**LINKEDIN_URL**)
 
 [Harnesses Matter More Than Models](**VIDEO_URL_2**)
 
-Doris Hernandez Argueta breaks down what a harness actually is, and builds one with five orchestrated agents in 30 hours.
+Doris Hernandez Argueta argues the harness matters more than the model, and walks through the one she built with five agents in 30 hours.
 
 Main Takeaways
 
-An agent is a model plus a harness — the two are not interchangeable
-A harness is tools, memory, context, guardrails, and above all evaluation
-Evaluation is the core: can the agent tell success, and loop until it gets there
-Y Combinator's last batch backed two things — hardware and harnesses
-Her 30-hour build ran a PM agent orchestrating frontend, backend, engine and QA
+The part that matters is evaluation. If the agent can tell when it's done, it can run the loop until it is
+Five agents built her visual identity tool, a PM reviewing every PR from the frontend, backend, engine and QA agents
+A YAML heartbeat checked every ten minutes that nothing had died, because an expired API quietly stopping an agent is the normal failure
+She had spent seven weeks on it by hand first. Knowing the outcome is what made the 30 hours possible
 
 Doris's [X](**X_URL**), [GitHub](**GITHUB_URL**), [LinkedIn](**LINKEDIN_URL**)
 
@@ -52,15 +50,14 @@ Doris's [X](**X_URL**), [GitHub](**GITHUB_URL**), [LinkedIn](**LINKEDIN_URL**)
 
 [LLMs Are Structurally Anti-Privacy](**VIDEO_URL_3**)
 
-Jeremy Healsmith shows why stripping PII fails, using k-anonymity and his NGO work with former child soldiers.
+Jeremy Healsmith shows why stripping names out of prompts protects nobody, drawing on his work with an NGO for former child soldiers.
 
 Main Takeaways
 
-"Strip the names out" is structurally insufficient — LLMs persist across sessions
-Family of five, arrived March, daughter with an impairment: identified in 3,000
-Each aid-worker session adds one attribute until the model can name the person
-Stripped medical records re-identify after seven or eight doctor visits
-If a watermark can encode one bit, nothing stops it encoding your IP and session
+Taking the names out doesn't help, because the model keeps what it learned across sessions
+Family of five, arrived in March, eldest daughter with a mobility impairment. That's enough to find one person in a camp of 3,000
+Every conversation an aid worker has adds one more attribute, until there's only one person it can be
+Capture fields, not narratives, and don't let the model keep what it doesn't need in its MD files
 
 Jeremy's [X](**X_URL**), [GitHub](**GITHUB_URL**), [LinkedIn](**LINKEDIN_URL**)
 
