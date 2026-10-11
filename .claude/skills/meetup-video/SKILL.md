@@ -125,8 +125,8 @@ silently passes empty arguments. Write the invocations out.
 
 ## Writing the descriptions
 
-Read `references/descriptions.md` — the house format and six real examples from
-the Substack. Write one per talk into `content/<date>/talks.md`.
+Invoke the `agentic-engineering-description` skill — it owns the house format
+and the real examples. Write one per talk into `content/<date>/talks.md`.
 
 Speaker names and affiliations come from `src/components/slides-<date>/content.ts`.
 The transcript is the better source for what was actually said — the planned
